@@ -1,0 +1,644 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    
+<style> 
+        .button-envoyer-left,.button-envoyer-right{
+            padding-right:10px;
+            padding-left:10px;
+        }
+         .button-envoyer-left-last,.button-envoyer-right-last{
+            padding-right:10px;
+            padding-left:10px;
+            border-left:none;
+            border-right:none;
+        }
+        .button-envoyer-left{
+            margin-right: 23px;
+            border-left: 1px #B15682 solid;
+            border-right: 1px #B15682 solid;
+            min-height:0px;
+           
+        }
+                .button-envoyer-left-last{
+            margin-right: 23px;
+            min-height:0px;
+           
+        }
+        .button-envoyer-right{
+            border-left: 1.5px #5090C1 solid;
+            border-right: 1.5px #5090C1 solid;
+            
+        }
+        .test .justify-reponse .card-body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+         .nav-select{
+            margin-top: 20px;
+        }
+        .nav-select .col-xs-6{
+            padding:0px;
+        }
+        .test .last-question{
+             padding-bottom: 40px;
+             border-bottom: 1px #B15682 solid;
+        }
+        .test .lire-suite{
+            cursor: pointer;   
+        }
+        .test .last-reponse{
+             padding-bottom: 40px;
+             border-bottom: 1px #5090C1 solid;
+        }
+        .test .questions-etudiants{
+            background-color:#B15682; 
+            color:white; height:39px; 
+            padding-top:6px; 
+	        font-size:17px; 
+	        font-weight: lighter;
+	        margin-right:4px; 
+	        padding-left:20px;
+        }
+        .test .reponses-enseignants{
+             background-color:#5090C1; 
+             color:white; height:39px; 
+             padding-top:6px; 
+             font-size: 17px; 
+	         font-weight: lighter; 
+	         margin-left:19px;
+	         padding-left:20px;
+        }
+        
+         .button-reponse{
+             text-align : right;
+             padding : 10px 0px;
+             display: none;
+         }
+         .button-reponse button{
+             
+             padding: 1px 3px;
+             right: 24px;
+         } 
+         .test .area-enseignant-reponse
+         {
+             display : none; 
+             margin: 0px;
+             width: 100%;
+             height: 100%;
+             resize: vertical;
+         }
+         .test .alert-select{
+             
+             display: none;
+             text-align:center;
+             letter-spacing:0.5px;
+         }
+         @media screen and (min-width: 800px) {
+              .test .row{
+                  display: flex;
+               }
+         }
+        .test .textarea-question{
+            height : 100px !important;
+            width: 100%;
+            background-color:#f8f8f9;
+            box-shadow: 0 1px 6px rgba(57,73,76,.35);
+            
+        }
+        .test .envoyer{
+            display : none;
+        }
+        .test i{
+            margin-right : 3px;
+        }
+        .test{
+            margin-bottom : 50px;
+        }
+        .test .mt-4{
+            
+            
+        }
+        .test .card-body
+        {
+        	padding: 15px 0px;
+        	padding-top: 0px ;
+        
+        }
+        .test .justify-reponse .card-body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .test .commentaire{
+        	position: relative;
+        	/*padding-left :38px;*/
+        	/*padding-right:38px;*/
+        	/*padding-top: 25px;*/
+        	padding-right: 25px;
+            padding-left: 25px;
+            padding-top : 24px;
+            min-height: 139px;
+            
+            border-left: 1px #5090C1 solid;
+            border-right: 1px #5090C1 solid;
+        	
+        }
+        .test .question{
+            margin-right: 23px;
+            border-left: 1px #B15682 solid;
+            border-right: 1px #B15682 solid;
+        }
+        .test .commentaire .card{
+        	border: none;
+        	background-color: #ffbe7b;
+        	box-shadow: 0 1px 6px rgba(57,73,76,.35);
+        	height: 100%;
+        }
+        .test .commentaire .card-body{
+        	background-color: #f2f2f2;
+        	height: 100%;
+        }
+        .test .reponse .card-body{
+        	background-color: #f2f2f2;
+        	transition : 0.5s;
+        }
+        .test .reponse .card-body:hover{
+        	background-color: #428BCA;
+        	cursor:pointer;
+        }
+              .test .reponse .card-body:hover .QE{
+        	color:white;
+        }
+                .test .reponse .card-body:hover .fa-reply{
+color:white;
+        }
+        .test .reponse-juste .card-body,.test .question-repondu .card-body{
+        	background-color: #f2f2f2 !important;
+        }
+                .test .reponse-juste .card-body{
+        	background-color: #D6DCE4 !important;
+        	cursor:default !important;
+        }
+        .test .user-circle{
+           position: absolute;
+           height: 55px;
+           width: 55px;
+           border-radius: 50%;
+           background-color: #ffbe7b;
+           background-color: #B15682 ;
+           z-index: 2;
+           top: 13px;
+           left: 6px;
+           border: 4px white solid;
+           text-align:center;
+           padding-top: 10px;
+           font-size: 16px;
+           font-weight: bold;
+           color: white;
+        
+        }
+        .test .reponse .user-circle{
+        	background-color: #95D1DF
+        }
+        .test .reponse-juste .user-circle,.test .question-repondu .user-circle{
+        	/*background-color:#2C7659;*/
+        	background-color:#5090C1;
+        }
+        .test .info{
+        	width: 100%;
+        	background-color: white;
+        }
+        .test ul{
+        	width: 100%;
+        }
+        .test .info li{
+          display: inline-block;
+          width: 49%;
+          padding-left: 18px;
+          color: #333333 !important;
+          font-size: 14px;
+        }
+        
+        .test .info .date{
+        	text-align: right;
+        	padding-right: 27px;
+        	padding-bottom:2px;
+        	font-size:12px;
+        	
+        }
+        .test .content{
+        	padding: 6px 30px;
+            font-size:13px; 
+        }
+        .test .en-attente{
+        	text-align: center;
+        	font-weight: bold;
+        	letter-spacing:1px;
+        }
+        .test .en-attente i{
+        	font-size: 25px;
+        	color: #999696;
+        }
+        
+        .test .navbar {
+        	background-color: red;
+        }
+        .test .add-button{
+        	box-shadow: 0 1px 6px rgba(57,73,76,.35);
+        	border-radius: 0px;
+        }
+        .test .form-control{
+        	height: 30px;
+        	border-radius: 0px;
+        	box-shadow: 0 1px 6px rgba(57,73,76,.35);
+        	height: 33px;
+        
+        }
+        .test .nav ul{
+        	padding: 0px;
+        	margin: 0px;
+        }
+        .test .nav li{
+           display: inline-block;
+           width:49%;
+        }
+        .test .button-left{
+        	text-align: right;
+        
+        }
+        .QE{
+    	font-size:12px !important;
+    	letter-spacing:2px;
+    	color: #999696;
+    /*	color:#5d5d5d;*/
+        }
+                #filtre{
+            width:100px;
+        }
+        .search{
+            width:200px;
+            height:30px;
+            padding: 0 5px;
+            margin-bottom:15px;
+        }
+                .search2{
+            width:100px;
+            height:30px;
+        }
+        .fa-filter,.fa-search,.fa-refresh{
+            float: left;
+    font-size: 25px;
+    padding: 0 10px;
+    padding-top: 4px;
+    color: #616161;
+        }
+
+         #searchById{
+text-align:center;
+        }
+        #refresh{
+            cursor:pointer;
+margin-left:10px;
+        }
+</style>
+<div class="page-header">
+        <h1>
+            REPONSES
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>
+                Données REPONSES
+            </small>
+        </h1>
+</div><!-- /.page-header -->
+    
+{{ include ('inc/etudiant_header.html.twig')}}
+
+ <div class="test">
+      
+    <div class="content mt-4">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="alert alert-danger alert-select" role="alert">
+                      Veuillez choisir un module!
+                </div>
+            </div>
+        </div>
+        <form class="ui form" action="{{ path('insert') }}" method="post">
+            <input type="hidden" name="token" value="{{ csrf_token('myform') }}" />
+        	   <div class="row nav-select">
+
+            		            		<div class=" col-xs-12 button-left">
+            		     {#<button type="button" class="btn btn-primary btn-sm add-button"><i class="fa fa-plus" aria-hidden="true"></i>#}
+                         {#               Ajouter une Question</button>#}
+            	    </div>  
+        	</div>
+    			 
+            <div class="row envoyer mt-4">
+              
+              
+              <div class="col-xs-12">
+                   <div class="form-group">
+                            <textarea class="form-control textarea-question" name="message"  id="exampleFormControlTextarea1" 
+                            rows="10" placeholder="Vous pouvez écrire votre question ici ..."></textarea>
+                  </div>
+              </div>
+               <div class="col-xs-6 ">
+        			 
+              </div>
+              <div class="col-xs-6 button-left ">
+        			 <button type="submit" class="btn btn-primary btn-sm "><i class="fa fa-paper-plane-o" aria-hidden="true"></i> Envoyer</button>
+        			 <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+              </div>
+    	    </div>
+        </form>
+	 </div>
+	 <!------------------------------- row ----------------------------------------->
+	 <div>
+	                 		<!--	<div class="col-xs-6">
+                		    <input type="text-box" placeholder="Rechercher par ID" id="searchById" class="search2" />
+            		  <i id="refresh" class="fa fa-refresh"></i>  
+            		</div> -->
+            		<div class="col-xs-12">
+            		    <input type="text-box" placeholder="Rechercher par nom , formation , message ..." id="search" class="search" />
+            		    <i class="fa fa-search"></i>
+            		</div>     
+	 </div>
+
+	<div class="content mainC" >
+	    
+	      <div class="row" style="margin-top: 15px;">
+	          <div class="col-sm-6 questions-etudiants">
+	              QUESTIONS ETUDIANTS
+	          </div>
+	          <div class="col-sm-6 reponses-enseignants">
+	              REPONSES  ENSEIGNANTS
+	          </div>
+	      </div>
+	      
+		{% set i = questions|length %}
+  
+        {% for qr in questions %}
+            <form class="ui form" action="{{ path('enseignant_insert') }}" method="post">
+                
+                    <input type="hidden" name="token" value="{{ csrf_token('myform') }}" />
+                    <input type="hidden" name="id_question"  value=" {{qr.id_question}}" />
+            
+                   <div class="row mt-4 " style="min-height:120px;">
+
+            {% if qr.id_reponse != null %}
+            
+            		   	     <div class="col-sm-6 commentaire question question-repondu {% if i == 1 %} last-question {% endif %}" >
+                    		   	  	  <div class="user-circle">Q{{i}}</div>
+                    	   	          <div class="card h-100">
+                    					  <div class="card-body">
+                    					  	<div class="info">
+                    					  		<ul>
+                    					  			<li> {{qr.nom_Etud}} {{qr.prenom_Etud}} | <span style="font-size:12px;"> {{ qr.forma }}  ~ {{ qr.promo }} </span> </li>
+                    					  			<li class="date"> {{qr.created_Q}} </li>
+                    					  		</ul>
+                    					  	</div>
+                    					     <div class="content">
+                        					     	{% if  qr.msg_Q|length > 205  %} 
+                    					     			{{qr.msg_Q |slice(0, 205)}} 
+                    					     			<a class="lire-suite" data-toggle="modal" data-target="#{{ 'mymodalQ'  ~ qr.id_question}}">... lire la suite</a>
+                    					     		{% else %}
+                    					     		    {{qr.msg_Q }} 
+                    					     		{% endif %}
+                    					     </div>
+                    					  </div>
+                    				  </div>
+                    		  </div> 
+                    		   <!-- Modal -->
+                                <div id="{{ 'mymodalQ'  ~ qr.id_question}}" class="modal fade" role="dialog">
+                                  <div class="modal-dialog">
+                                
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Question</h4>
+                                      </div>
+                                      <div class="modal-body">
+                                          {#<p>	{{qr.message}} </p>#}
+                                          {{qr.msg_Q }} 
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+                                      </div>
+                                    </div>
+                                
+                                  </div>
+                                </div>
+        		      
+                    		      
+                		      
+                		      <!-- -------------------------------------------------------------- -->
+                					  
+                					  		    
+                    		 <div class="col-sm-6 commentaire reponse reponse-juste  {% if i == 1 %} last-reponse {% endif %}" >
+                		   	  	     <div class="user-circle">R{{i}}</div>
+                	   	             <div class="card">
+                					  <div class="card-body">
+                					  	<div class="info">
+                					  		<ul>
+                					  			<li> {{qr.nom_Ens}} {{qr.prenom_Ens}} </li>
+                					  			<li class="date">{{qr.created_R}}</li>
+                					  		</ul>
+                					  	</div>
+                					     <div class="content">
+                    					     	{% if  qr.msg_R|length > 205  %} 
+                					     			{{qr.msg_R |slice(0, 205)}} 
+                					     			<a class="lire-suite" data-toggle="modal" data-target="#{{ 'reponse'  ~ qr.id_question}}">... lire la suite</a>
+                					     		{% else %}
+                					     		    {{qr.msg_R }} 
+                					     		{% endif %}
+                					     </div>
+                					  </div>
+                				  </div>
+            		         </div> 
+            		         
+                		     <!-- Modal -->
+                            <div id="{{ 'reponse'  ~ qr.id_question}}" class="modal fade" role="dialog">
+                              <div class="modal-dialog">
+                            
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Reponse</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                      {#<p>	{{qr.message}} </p>#}
+                                      {{qr.msg_R }} 
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+                                  </div>
+                                </div>
+                            
+                              </div>
+                            </div>
+        		      
+            		    
+        {% else %}
+        			
+                			 <div class="col-sm-6 commentaire question {% if i == 1 %} last-question {% endif %} ">
+                    		   	    <div class="user-circle">Q{{i}}</div>
+                    	   	          <div class="card h-100">
+                    					  <div class="card-body">
+                    					  	<div class="info">
+                    					  		<ul>
+                    					  			<li> {{qr.nom_Etud}} {{qr.prenom_Etud}} | <span style="font-size:12px;"> {{ qr.forma }}  ~ {{ qr.promo }} </span> </li>
+                    					  			<li class="date"> {{qr.created_Q}} </li>
+                    					  		</ul>
+                    					  	</div>
+                    					     <div class="content">
+                        					     	{% if  qr.msg_Q|length > 205  %} 
+                    					     			{{qr.msg_Q |slice(0, 205)}} 
+                    					     			<a class="lire-suite" data-toggle="modal" data-target="#{{ 'mymodal'  ~ qr.id_question}}">... lire la suite</a>
+                    					     		{% else %}
+                    					     		    {{qr.msg_Q }} 
+                    					     		{% endif %}
+                    					     </div>
+                    					  </div>
+                    				  </div>
+                		      </div> 
+        		              
+        		               <!-- Modal -->
+                                <div id="{{ 'mymodal'  ~ qr.id_question}}" class="modal fade" role="dialog">
+                                  <div class="modal-dialog">
+                                
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Question{{i}}</h4>
+                                      </div>
+                                      <div class="modal-body">
+                                        <p>	{{qr.msg_Q}} </p>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                      </div>
+                                    </div>
+                                
+                                  </div>
+                                </div>
+        		      
+        		      
+                		      <!-- ---------------------------------------------------------------->
+                					  
+                					  	
+                			 <div class="col-sm-6 commentaire reponse  justify-reponse {% if i == 1 %} last-reponse {% endif %}" id="{{'col'  ~  qr.id_question}}">
+                			    
+        	   	                   <div class="card" style="position:relative;">
+                					    <div class="card-body reponse-hide">
+                					      <div class="content en-attente">
+                    					    	<div>
+                    					    		 <i class="fa fa-reply" ></i> 
+                    					     	</div>
+                    					     	<div class="QE">
+                    					     	     Repondre
+                    					     	</div>   	
+                					      </div>
+                					    
+                				        {#<div style="position: absolute; right:-8px; box-shadow: 0 1px 6px rgba(57,73,76,.35); #}
+                					        {#bottom:-8px; background-color: #428BCA; padding: 2px 4px; border-radius: 50%; border: 1px #428BCA solid; ">#}
+                					        {#     <i class="fa fa-reply" ></i> #}
+                				        {#</div>#}
+                					    
+                					  </div>
+                					  <textarea  class="area-enseignant-reponse" name="message" ></textarea>
+                				  </div>
+        		              </div> 
+    	{% endif %}
+         
+         		     	
+</div>
+     
+    <div class="row">
+        <div class=" {% if i != 1 %} button-envoyer-left {% else %} button-envoyer-left-last {% endif %} col-sm-6 " >
+               
+        </div>
+        <div class=" {% if i != 1 %} button-envoyer-right {% else %} button-envoyer-right-last {% endif %}  button-reponse col-sm-6  {{'col'  ~  qr.id_question}}" >
+              <button type="submit" class="btn btn-primary btn-sm {{'button'  ~  qr.id_question}}" >
+                  <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+              Envonyer</button>		      
+        </div>
+    </div>
+
+      
+    </form>
+         
+          {% set i = i - 1 %}
+{% endfor %}
+        
+           
+            
+    </div>
+         
+</div>
+
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+                    $("body").on('.click','button[name ="ziko"]',function(){
+               var name="."+$(this).attr('id');
+               alert($(name).val());
+          });
+          
+          $("body").on('click','.reponse',function(){
+              
+              $(".reponse-hide").show();
+              $(".area-enseignant-reponse").hide();
+              $(this).find(".reponse-hide").hide();
+              $(this).find(".area-enseignant-reponse").show();
+              
+              $(".button-reponse").hide();
+              $("."+ $(this).attr('id')).show();
+               
+          });
+          
+          $("body").on('click','.add-button',function(){
+               var idmod=$('#module').find('option:selected').val();
+               if(idmod == 0){
+                     $('.alert-select').show();
+               }else{
+                     $( ".envoyer" ).show( "slow" );
+                     $( ".button-reponse" ).show( "slow" );
+                     
+                     $('.alert-select').hide();
+               }
+          });
+        $("body").on('change','#searchById',function(){
+           var id=$(this).val();
+            $.ajax({
+                type:'POST',
+                url:"{{ path('IDRec_QR') }}",
+                data:{id:id},
+                success:function(html){
+                    $('.mainC').empty().html(html); 
+                }
+            });
+          });
+          
+    $("body").on("keyup", "#search", function () {
+      var value = $(this).val().toLowerCase();
+      $(".ui.form").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+          
+    </script>  
+
+
+
+{% endblock %}

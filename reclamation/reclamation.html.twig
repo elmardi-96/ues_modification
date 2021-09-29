@@ -1,0 +1,740 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    
+<style> 
+        .test .piece{
+            padding: 0px 30px;
+            color: black;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .test .piece a{
+            color: #B15682;
+            font-weight:bold;
+            font-size: 16px;
+        }
+        .test .piece i{
+            margin-left : 3px;
+        }
+        .button-envoyer-left,.button-envoyer-right{
+            padding-right:10px;
+            padding-left:10px;
+        }
+        .button-envoyer-left-last,.button-envoyer-right-last{
+            padding-right:10px;
+            padding-left:10px;
+            border-left:none;
+            border-right:none;
+        }
+        .button-envoyer-left{
+            margin-right: 23px;
+            border-left: 1px #B15682 solid;
+            border-right: 1px #B15682 solid;
+            min-height:0px;
+           
+        }
+        .button-envoyer-left-last{
+            margin-right: 23px;
+            min-height:0px;
+           
+        }
+        .button-envoyer-right{
+            border-left: 1px #2C7659 solid;
+            border-right: 1px #2C7659 solid;
+            
+        }
+         .nav-select{
+            margin-top: 20px;
+        }
+        .nav-select .col-xs-6{
+            padding:0px;
+        }
+        .test .last-question{
+             padding-bottom: 40px;
+             border-bottom: 1px #B15682 solid;
+        }
+        .test .lire-suite{
+            cursor: pointer;   
+        }
+        .test .last-reponse{
+             padding-bottom: 40px;
+             border-bottom: 1px #2C7659 solid;
+        }
+        .test .questions-etudiants{
+            background-color:#B15682; 
+            color:white; height:39px; 
+            padding-top:6px; 
+	        font-size:17px; 
+	        font-weight: lighter;
+	        margin-right:4px; 
+	        padding-left:20px;
+        }
+        .test .reponses-enseignants{
+             background-color:#2C7659; 
+             color:white; height:39px; 
+             padding-top:6px; 
+             font-size: 17px; 
+	         font-weight: lighter; 
+	         margin-left:19px;
+	         padding-left:20px;
+        }
+        
+         .button-reponse{
+             text-align : right;
+             padding : 10px 0px;
+             display: none;
+         }
+         .button-reponse button{
+             
+             padding: 1px 3px;
+             right: 24px;
+         } 
+         .test .area-enseignant-reponse
+         {
+             display : none; 
+             margin: 0px;
+             width: 100%;
+             height: 100%;
+             resize: vertical;
+         }
+         .test .alert-select{
+             
+             display: none;
+             text-align:center;
+             letter-spacing:0.5px;
+         }
+         @media screen and (min-width: 800px) {
+              .test .row{
+                  display: flex;
+               }
+         }
+        .test .textarea-question{
+            height : 100px !important;
+            width: 100%;
+            background-color:#f8f8f9;
+            box-shadow: 0 1px 6px rgba(57,73,76,.35);
+            
+        }
+        .test .envoyer{
+            display : none;
+        }
+        .test i{
+           /* margin-right : 3px;*/
+        }
+        .test{
+            margin-bottom : 50px;
+        }
+        .test .mt-4{
+            
+            
+        }
+        .test .card-body
+        {
+        	padding: 15px 0px;
+        	padding-top: 0px ;
+        
+        }
+        .test .justify-reponse .card-body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .test .commentaire{
+        	position: relative;
+        	/*padding-left :38px;*/
+        	/*padding-right:38px;*/
+        	/*padding-top: 25px;*/
+        	padding-right: 25px;
+            padding-left: 25px;
+            padding-top : 24px;
+            
+            
+            border-left: 1px #2C7659 solid;
+            border-right: 1px #2C7659 solid;
+            
+            min-height:137px;
+        	
+        }
+        .test  .question{
+            margin-right: 23px;
+            border-left: 1px #B15682 solid;
+            border-right: 1px #B15682 solid;
+        }
+        .test .commentaire .card{
+        	border: none;
+        	background-color: #ffbe7b;
+        	box-shadow: 0 1px 6px rgba(57,73,76,.35);
+        	height: 100%;
+        }
+        .test .commentaire .card-body{
+        	background-color: #f2f2f2;
+        	height: 100%;
+        }
+        .test .reponse .card-body{
+        	background-color: #d4ecd1 ;
+        	transition : 0.5s;
+        }
+        .test .reponse .card-body:hover{
+        	/*background-color: #428BCA;*/
+        	background-color:#2C7659;
+        	cursor:pointer;
+        }
+       .test .reponse .card-body:hover .QE,.fa-reply{
+        	color:white;
+        }
+       .test .reponse .card-body:hover .fa-reply{
+        	color:white;
+        }
+        .test .reponse-juste .card-body,.test .question-repondu .card-body{
+        	background-color: #f2f2f2 !important;
+        }
+        .test .reponse-juste .card-body{
+            background-color:#e9f7e8 !important;
+            cursor:default !important;
+        }
+        .test .user-circle{
+           position: absolute;
+           height: 55px;
+           width: 55px;
+           border-radius: 50%;
+           background-color: #ffbe7b;
+           background-color: #B15682 ;
+           z-index: 2;
+           top: 13px;
+           left: 6px;
+           border: 4px white solid;
+           text-align:center;
+           padding-top: 10px;
+           font-size: 16px;
+           font-weight: bold;
+           color: white;
+        
+        }
+        .test .reponse .user-circle{
+        	background-color: #95D1DF
+        }
+        .test .reponse-juste .user-circle,.test .question-repondu .user-circle{
+        	background-color:#2C7659;
+        }
+        .test .info{
+        	width: 100%;
+        	background-color: white;
+        }
+        .test ul{
+        	width: 100%;
+        }
+        .test .info li{
+          display: inline-block;
+          width: 49%;
+          padding-left: 18px;
+          color: #333333 !important;
+          font-size: 14px;
+        }
+        
+        .test .info .date{
+        	text-align: right;
+        	padding-right: 27px;
+        	padding-bottom:2px;
+        	font-size:12px;
+        	
+        }
+        .test .content{
+        	padding: 6px 30px;
+            font-size:13px; 
+        }
+        .test .en-attente{
+        	text-align: center;
+        	font-weight: bold;
+        	letter-spacing:1px;
+        }
+        .test .en-attente i{
+        	font-size: 25px;
+        	color: #999696;
+        }
+        
+        .test .navbar {
+        	background-color: red;
+        }
+        .test .add-button{
+        	box-shadow: 0 1px 6px rgba(57,73,76,.35);
+        	border-radius: 0px;
+        }
+        .test .form-control{
+        	height: 30px;
+        	border-radius: 0px;
+        	box-shadow: 0 1px 6px rgba(57,73,76,.35);
+        	height: 33px;
+        
+        }
+        .test .nav ul{
+        	padding: 0px;
+        	margin: 0px;
+        }
+        .test .nav li{
+           display: inline-block;
+           width:49%;
+        }
+        .test .button-left{
+        	text-align: right;
+        
+        }
+        .QE{
+    	font-size:12px !important;
+    	letter-spacing:2px;
+    	color: #999696;
+    /*	color:#5d5d5d;*/
+        }
+        #filtre{
+            width:100px;
+        }
+        .search{
+            width:200px;
+            height:30px;
+            padding: 0 5px;
+        }
+                .search2{
+            width:100px;
+            height:30px;
+        }
+        .fa-filter,.fa-search,.fa-refresh{
+            float: left;
+    font-size: 25px;
+    padding: 0 10px;
+    padding-top: 4px;
+    color: #616161;
+        }
+
+         #searchById{
+text-align:center;
+        }
+        #refresh{
+            cursor:pointer;
+margin-left:10px;
+        }
+        #PJ{
+            margin:0 5px;
+            font-size:17px;
+        }
+</style>
+<div class="page-header">
+        <h1>
+            Réclamations
+            <small>
+                <i class="ace-icon fa fa-angle-double-right"></i>
+                Données Réclamation
+            </small>
+        </h1>
+</div><!-- /.page-header -->
+    
+{{ include ('inc/etudiant_header.html.twig')}}
+
+ <div class="test">
+	 <!------------------------------- row ----------------------------------------->
+	 
+	     <div class="row nav-select">
+            		<div class="col-xs-4">
+            		    <i class="fa fa-filter"></i>
+        				<select name="filtre" class="form-control form-control-sm" id="filtre">
+        				   <option id="Tout" value="Tout">Tout</option>
+                                   <option id='Repondu' value="Repondu" >Répondu</option>
+                				   <option id='NonRepondu' value="NonRepondu" >Non Répondu</option>
+        				 </select>
+            		</div>
+            		<div class="col-xs-3">
+                		    <input type="text-box" placeholder="Rechercher par ID" id="searchById" class="search2" />
+            		  <i id="refresh" class="fa fa-refresh"></i>  
+            		</div>
+            		<div class="col-xs-3">
+            		    <input type="text-box" placeholder="Rechercher par nom , formation , message ..." id="search" class="search" />
+            		    <i class="fa fa-search"></i>
+            		</div>
+            		<div class="col-xs-2" style="text-align:right;">
+            		    <a class="btn btn-success" href="{{ path('excel_reclamation') }}"  style="right: 20px;"> <i class="fa fa-file-excel-o"></i> Générer réclamations</a>
+            		</div>
+                       
+           </div>
+	<div class="content mainC" >
+
+	      <div class="row" style="margin-top: 15px;">
+	          <div class="col-sm-6 questions-etudiants">
+	              DEMANDE / RECLAMATION ETUDIANT
+	          </div>
+	          <div class="col-sm-6 reponses-enseignants">
+	              RETOUR SERVICE AFFAIRES ESTUDIANTINES
+	          </div>
+	      </div>
+	      
+		{% set i = reclamations|length %}
+  
+        {% for qr in reclamations %}
+        
+            <form class="ui form" action="{{ path('insert_admin_reclamation') }}" method="post">
+                
+                <input type="hidden" name="token" value="{{ csrf_token('myform') }}" />
+                <input type="hidden" name="id_reclamation"  value=" {{qr.id_reclamation}}" />
+                    
+                    <div class="row mt-4 " style="min-height:120px;">
+        
+                    {% if qr.id_reclamation_reponse != null %}
+                    
+        		   	     <div class="col-sm-6 commentaire question question-repondu {% if i == 1 %} last-question {% endif %}" >
+                		   	  	  <div class="user-circle">Q{{i}}</div>
+                	   	          <div class="card h-100">
+                					  <div class="card-body">
+                					  	<div class="info">
+                					  		<ul>
+                					  			<li> {{qr.nom}} {{qr.prenom}} | <span style="font-size:12px;"> {{ qr.forma }}  ~ {{ qr.promo }} </span> </li>
+                					  			<li class="date"> {{qr.created}} </li>
+                					  		</ul>
+                					  	</div>
+                					     <div class="content">
+                					        	{% if  qr.message|length > 205  %} 
+                					        	       <div style="font-weight:bold; letter-spacing:0.7px; padding-bottom:2px;"> 
+                    					     			  	        {% if  qr.objet|length > 60  %} 
+                        					     	    	    	   {{qr.objet |slice(0, 60)}}  ...
+                        					     	    	    	{% else %}
+                        					     	    	    	   {{qr.objet}} 
+                        					     	    	    	{% endif %}
+                    					     			</div>
+                					     		    	{{qr.message |slice(0, 205)}} 
+                					     			<a class="lire-suite" data-toggle="modal" data-target="#{{ 'mymodal'  ~ qr.id_reclamation}}">... lire la suite</a>
+                					     		{% else %}
+                					     		    	<div style="font-weight:bold; letter-spacing:0.7px; padding-bottom:2px;"> 
+                    					     			  	        {% if  qr.objet|length > 60  %} 
+                        					     	    	    	   {{qr.objet |slice(0, 60)}}  ...
+                        					     	    	    	{% else %}
+                        					     	    	    	   {{qr.objet}} 
+                        					     	    	    	{% endif %}
+                    					     			</div>
+                					                	{{qr.message}} 
+                					                	{{qr.piece}}
+                					     		{% endif %}
+                					     </div>
+                					      <div class="piece"> 
+                					        {% if  qr.piece is not empty %}
+                        					        {% set pieces = qr.piece |split('|') %}
+                                                    {% for piece in pieces %}
+                                                            {% set exts = piece |split('.') %}
+                                                            {#{% for ext in exts %}#}
+                                                            
+                                                                   
+                                                                   
+                                                            {#{% endfor %}#}
+                                                             {% if piece != null %}
+                                                                <a href="{{ asset('uploads/filesReclamation/' ~ piece ) }}" target="_blank" id="PJ">{% if  exts[1] |lower  == 'tif' or  exts[1] |lower  == 'png' or exts[1] |lower  == 'jpg' or exts[1] |lower  == 'gif' or exts[1] |lower  == 'jpeg' or exts[1] |lower  == 'tiff' %}
+                                                                      <i class="fa fa-file-image-o"></i>
+                                                                    {% elseif exts[1] |lower == 'pdf' %}
+                                                                      <i class="fa fa-file-pdf-o"></i>
+                                                                   {% elseif exts[1] |lower == 'xlsx' or exts[1] |lower == 'xlsx' or exts[1] |lower == 'xlsm' or exts[1] |lower == 'xlsb' or exts[1] |lower == 'xls' or exts[1] |lower == 'xlam' %}
+                                                                      <i class="fa fa-file-excel-o"></i>
+                                                                   {% else %}      
+                                                                   <i class="fa fa-file"></i>
+                                                                   {% endif %} </a>
+                                                             {% endif %}
+                                                            
+                                                            
+                                                    {% endfor %}
+                                                    
+                                            {% endif %}
+                                                            					    
+                                        </div>
+                					  </div>
+                				  </div>
+                		  </div> 
+                		      
+            		      
+            		      <!-- -------------------------------------------------------------- -->
+            					  
+            					  		    
+                		 <div class="col-sm-6 commentaire reponse reponse-juste  {% if i == 1 %} last-reponse {% endif %}" >
+                		     
+            		   	  	     <div class="user-circle">R{{i}}</div>
+            	   	             <div class="card">
+                    					  <div class="card-body">
+                    					  	<div class="info">
+                    					  		<ul>
+                    					  			<li> {{qr.username}} </li>
+                    					  			<li class="date">{{qr.created}}</li>
+                    					  		</ul>
+                    					  	</div>
+                    					     <div class="content">
+                            					     	{% if  qr.message_reponse|length > 205  %} 
+                        					     			{{qr.message_reponse |slice(0, 205)}} 
+                        					     			<a class="lire-suite" data-toggle="modal" data-target="#{{ 'reponse'  ~ qr.id_reclamation}}">... lire la suite</a>
+                        					     		{% else %}
+                        					             	{{qr.message_reponse}} 
+                        					     		{% endif %}
+                    					     </div>
+                    					     <div class="btn btn-danger btn-sm button544" id="annuler" style="float: right;margin: 5px 5px;padding: 1px 5px 2px 0px;">
+                                               <i class="fa fa-times" aria-hidden="true" style="padding: 0px 3px;"></i>
+                                               Annuler
+                                              <input type="hidden" name="annuler" value=" {{qr.id_reclamation_reponse}}" />
+                                             </div>
+
+                    					  </div>
+            				     </div>
+        		         </div> 
+        		         
+        		            <!-- Modal -->
+                            <div id="{{ 'reponse'  ~ qr.id_reclamation}}" class="modal fade" role="dialog">
+                              <div class="modal-dialog">
+                            
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Réclamation</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                    <p>	{{qr.message_reponse}} </p>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+                                  </div>
+                                </div>
+                            
+                              </div>
+                            </div>
+                    		    
+                {% else %}
+                			
+            			 <div class="col-sm-6 commentaire question {% if i == 1 %} last-question {% endif %} ">
+                		   	    <div class="user-circle">Q{{i}}</div>
+                	   	          <div class="card h-100">
+                					  <div class="card-body">
+                					  	<div class="info">
+                					  		<ul>
+                					  			<li> {{qr.nom}} {{qr.prenom}} | <span style="font-size:12px;"> {{ qr.forma }}  ~ {{ qr.promo }} </span></li>
+                					  			<li class="date"> {{qr.created}} </li>
+                					  		</ul>
+                					  	</div>
+                					     <div class="content">
+                					         
+                    					     		{% if  qr.message|length > 205  %} 
+                    					     			{{qr.message |slice(0, 205)}} 
+                    					     			<a class="lire-suite" data-toggle="modal" data-target="#{{ 'mymodal'  ~ qr.id_reclamation}}">... lire la suite</a>
+                    					     		{% else %}
+                    					     			<div style="font-weight:bold; letter-spacing:0.7px; padding-bottom:2px;"> {{qr.objet}} </div>
+                    					             	{{qr.message}} 
+                    					     		{% endif %}
+                					     </div>
+                					     <div class="piece"> 
+                					        {% if  qr.piece is not empty %}
+                        					        {% set pieces = qr.piece |split('|') %}
+                                                    {% for piece in pieces %}
+                                                            {% set exts = piece |split('.') %}
+                                                            {#{% for ext in exts %}#}
+                                                            
+                                                                   
+                                                                   
+                                                            {#{% endfor %}#}
+                                                             {% if piece != null %}
+                                                                <a href="{{ asset('uploads/filesReclamation/' ~ piece ) }}" target="_blank" id="PJ">{% if  exts[1] |lower  == 'tif' or  exts[1] |lower  == 'png' or exts[1] |lower  == 'jpg' or exts[1] |lower  == 'gif' or exts[1] |lower  == 'jpeg' or exts[1] |lower  == 'tiff' %}
+                                                                      <i class="fa fa-file-image-o"></i>
+                                                                    {% elseif exts[1] |lower == 'pdf' %}
+                                                                      <i class="fa fa-file-pdf-o"></i>
+                                                                   {% elseif exts[1] |lower == 'xlsx' or exts[1] |lower == 'xlsx' or exts[1] |lower == 'xlsm' or exts[1] |lower == 'xlsb' or exts[1] |lower == 'xls' or exts[1] |lower == 'xlam' %}
+                                                                      <i class="fa fa-file-excel-o"></i>
+                                                                   {% else %}      
+                                                                   <i class="fa fa-file"></i>
+                                                                   {% endif %} </a>
+                                                             {% endif %}
+                                                            
+                                                            
+                                                    {% endfor %}
+                                                    
+                                            {% endif %}
+                                                            					    
+                                        </div>
+                					  </div>
+                					  
+                				  </div>
+            		      </div> 
+    		              
+    		              
+    		      
+            		      <!-- ---------------------------------------------------------------->
+            					  
+            					  	
+            			 <div class="col-sm-6 commentaire reponse  justify-reponse {% if i == 1 %} last-reponse {% endif %}"  id="{{'col'  ~  qr.id_reclamation}}">
+            			    
+    	   	                   <div class="card" style="position:relative;">
+            					    <div class="card-body reponse-hide">
+            					      <div class="content en-attente">
+                					    	<div>
+                					    		 <i class="fa fa-reply" ></i> 
+                					     	</div>
+                					     	<div class="QE">
+                					     	     Répondre
+                					     	</div>   	
+            					      </div>
+            					    
+            				        {#<div style="position: absolute; right:-8px; box-shadow: 0 1px 6px rgba(57,73,76,.35); #}
+            					       {# bottom:-8px; background-color: #428BCA; padding: 2px 4px; border-radius: 50%; border: 1px #428BCA solid; ">#}
+            					       {#      <i class="fa fa-reply" ></i> #}
+            				        {#</div>#}
+            					    
+            					  </div>
+            					  <textarea  class="area-enseignant-reponse" name="message" ></textarea>
+            				  </div>
+    		              </div> 
+            	{% endif %}
+                 
+                 		     	
+        </div>
+             
+            <div class="row">
+                <div class=" {% if i == 1 %} button-envoyer-left-last {% elseif i != 1 %} button-envoyer-left {% endif %} col-sm-6 " >
+                       
+                </div>
+                <div class="{% if i == 1 %} button-envoyer-right-last {% elseif i != 1%} button-envoyer-right {% endif %}  button-reponse col-sm-6  {{'col'  ~  qr.id_reclamation}}" >
+                      <button type="submit" class="btn btn-primary btn-sm {{'button'  ~  qr.id_reclamation}}" >
+                          <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                      Envonyer</button>		      
+                </div>
+            </div>
+        
+                <!-- Modal -->
+                <div id="{{ 'mymodal'  ~ qr.id_reclamation}}" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+                
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Réclamation{{i}}</h4>
+                      </div>
+                      <div class="modal-body">
+                              <p>	{{qr.message}} </p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                
+                  </div>
+                </div>
+    		      
+            </form>
+                 
+                  {% set i = i - 1 %}
+        {% endfor %}
+         
+    </div>
+         
+</div>
+
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+          
+          $("body").on('.click','button[name ="ziko"]',function(){
+               var name="."+$(this).attr('id');
+               alert($(name).val());
+          });
+          
+          $("body").on('click','.reponse',function(){
+              
+              $(".reponse-hide").show();
+              $(".area-enseignant-reponse").hide();
+              $(this).find(".reponse-hide").hide();
+              $(this).find(".area-enseignant-reponse").show();
+              
+              $(".button-reponse").hide();
+              $("."+ $(this).attr('id')).show();
+               
+          });
+          
+          $("body").on('click','.add-button',function(){
+               var idmod=$('#module').find('option:selected').val();
+               if(idmod == 0){
+                     $('.alert-select').show();
+               }else{
+                     $( ".envoyer" ).show( "slow" );
+                     $( ".button-reponse" ).show( "slow" );
+                     
+                     $('.alert-select').hide();
+               }
+          });
+          
+          $("body").on('change','#module',function(){
+           var idmod=$(this).find('option:selected').attr('id');
+                              $('.alert-select').hide();
+            $.ajax({
+                type:'POST',
+                url:"{{ path('mod') }}",
+                data:{idmod:idmod,type:1},
+                success:function(html){
+                    $('.mainC').empty().html(html); 
+                }
+            });
+          });
+          
+          $("body").on('change','#filtre',function(){
+           var id=$(this).find('option:selected').attr('id');
+                              $('.alert-select').hide();
+            $.ajax({
+                type:'POST',
+                url:"{{ path('filtre') }}",
+                data:{id:id},
+                success:function(html){
+                    $('.mainC').empty().html(html); 
+                }
+            });
+          });
+          
+          $("body").on('click','#refresh',function(){
+           var id='Tout';
+            $.ajax({
+                type:'POST',
+                url:"{{ path('filtre') }}",
+                data:{id:id},
+                success:function(html){
+                    $('.mainC').empty().html(html); 
+                }
+            });
+          });
+          
+        $("body").on('change','#searchById',function(){
+           var id=$(this).val();
+            $.ajax({
+                type:'POST',
+                url:"{{ path('IDRec') }}",
+                data:{id:id},
+                success:function(html){
+                    $('.mainC').empty().html(html); 
+                }
+            });
+          });
+          
+    $("body").on("keyup", "#search", function () {
+      var value = $(this).val().toLowerCase();
+      $(".ui.form").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+    
+              $("body").on('click','#annuler',function(){
+           var id=$(this).find("input[name='annuler']").val();
+            $.ajax({
+                type:'POST',
+                url:"{{ path('annuler_reclamation') }}",
+                data:{id:id},
+                success:function(html){
+                    location.reload();
+                }
+            });
+          });
+          
+    </script>  
+
+
+
+{% endblock %}

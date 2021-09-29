@@ -1,0 +1,262 @@
+
+	      <div class="row" style="margin-top: 15px;">
+	          <div class="col-sm-6 questions-etudiants">
+	              DEMANDE / RECLAMATION ETUDIANT
+	          </div>
+	          <div class="col-sm-6 reponses-enseignants">
+	              RETOUR SERVICE AFFAIRES ESTUDIANTINES
+	          </div>
+	      </div>
+
+{% set i = reclamations|length %}
+  
+        {% for qr in reclamations %}
+        
+            <form class="ui form" action="{{ path('insert_admin_reclamation') }}" method="post">
+                
+                <input type="hidden" name="token" value="{{ csrf_token('myform') }}" />
+                <input type="hidden" name="id_reclamation"  value=" {{qr.id_reclamation}}" />
+                    
+                    <div class="row mt-4 " style="min-height:120px;">
+        
+                    {% if qr.id_reclamation_reponse != null %}
+                    
+        		   	     <div class="col-sm-6 commentaire question question-repondu {% if i == 1 %} last-question {% endif %}" >
+                		   	  	  <div class="user-circle">Q{{i}}</div>
+                	   	          <div class="card h-100">
+                					  <div class="card-body">
+                					  	<div class="info">
+                					  		<ul>
+                					  			<li> {{qr.nom}} {{qr.prenom}} | <span style="font-size:12px;"> {{ qr.forma }}  ~ {{ qr.promo }} </span> </li>
+                					  			<li class="date"> {{qr.created}} </li>
+                					  		</ul>
+                					  	</div>
+                					     <div class="content">
+                					        	{% if  qr.message|length > 205  %} 
+                					        	       <div style="font-weight:bold; letter-spacing:0.7px; padding-bottom:2px;"> 
+                    					     			  	        {% if  qr.objet|length > 60  %} 
+                        					     	    	    	   {{qr.objet |slice(0, 60)}}  ...
+                        					     	    	    	{% else %}
+                        					     	    	    	   {{qr.objet}} 
+                        					     	    	    	{% endif %}
+                    					     			</div>
+                					     		    	{{qr.message |slice(0, 205)}} 
+                					     			<a class="lire-suite" data-toggle="modal" data-target="#{{ 'mymodal'  ~ qr.id_reclamation}}">... lire la suite</a>
+                					     		{% else %}
+                					     		    	<div style="font-weight:bold; letter-spacing:0.7px; padding-bottom:2px;"> 
+                    					     			  	        {% if  qr.objet|length > 60  %} 
+                        					     	    	    	   {{qr.objet |slice(0, 60)}}  ...
+                        					     	    	    	{% else %}
+                        					     	    	    	   {{qr.objet}} 
+                        					     	    	    	{% endif %}
+                    					     			</div>
+                					                	{{qr.message}} 
+                					     		{% endif %}
+                					     </div>
+                					      <div class="piece"> 
+                					        {% if  qr.piece is not empty %}
+                        					        {% set pieces = qr.piece |split('|') %}
+                                                    {% for piece in pieces %}
+                                                            {% set exts = piece |split('.') %}
+                                                            {#{% for ext in exts %}#}
+                                                            
+                                                                   
+                                                                   
+                                                            {#{% endfor %}#}
+                                                             {% if piece != null %}
+                                                                <a href="{{ asset('uploads/filesReclamation/' ~ piece ) }}" target="_blank" id="PJ">{% if  exts[1] |lower  == 'tif' or  exts[1] |lower  == 'png' or exts[1] |lower  == 'jpg' or exts[1] |lower  == 'gif' or exts[1] |lower  == 'jpeg' or exts[1] |lower  == 'tiff' %}
+                                                                      <i class="fa fa-file-image-o"></i>
+                                                                    {% elseif exts[1] |lower == 'pdf' %}
+                                                                      <i class="fa fa-file-pdf-o"></i>
+                                                                   {% elseif exts[1] |lower == 'xlsx' or exts[1] |lower == 'xlsx' or exts[1] |lower == 'xlsm' or exts[1] |lower == 'xlsb' or exts[1] |lower == 'xls' or exts[1] |lower == 'xlam' %}
+                                                                      <i class="fa fa-file-excel-o"></i>
+                                                                   {% else %}      
+                                                                   <i class="fa fa-file"></i>
+                                                                   {% endif %} </a>
+                                                             {% endif %}
+                                                            
+                                                            
+                                                    {% endfor %}
+                                                    
+                                            {% endif %}
+                                                            					    
+                                        </div>
+                					  </div>
+                				  </div>
+                		  </div> 
+                		      
+            		      
+            		      <!-- -------------------------------------------------------------- -->
+            					  
+            					  		    
+                		 <div class="col-sm-6 commentaire reponse reponse-juste  {% if i == 1 %} last-reponse {% endif %}" >
+                		     
+            		   	  	     <div class="user-circle">R{{i}}</div>
+            	   	             <div class="card">
+                    					  <div class="card-body">
+                    					  	<div class="info">
+                    					  		<ul>
+                    					  			<li> {{qr.username}} </li>
+                    					  			<li class="date">{{qr.created}}</li>
+                    					  		</ul>
+                    					  	</div>
+                    					     <div class="content">
+                            					     	{% if  qr.message_reponse|length > 205  %} 
+                        					     			{{qr.message_reponse |slice(0, 205)}} 
+                        					     			<a class="lire-suite" data-toggle="modal" data-target="#{{ 'reponse'  ~ qr.id_reclamation}}">... lire la suite</a>
+                        					     		{% else %}
+                        					             	{{qr.message_reponse}} 
+                        					     		{% endif %}
+                    					     </div>
+                    					     <div class="btn btn-danger btn-sm button544" id="annuler" style="float: right;margin: 5px 5px;padding: 1px 5px 2px 0px;">
+                                               <i class="fa fa-times" aria-hidden="true" style="padding: 0px 3px;"></i>
+                                               Annuler
+                                              <input type="hidden" name="annuler" value=" {{qr.id_reclamation_reponse}}" />
+                                             </div>
+                    					  </div>
+            				     </div>
+        		         </div> 
+        		         
+        		            <!-- Modal -->
+                            <div id="{{ 'reponse'  ~ qr.id_reclamation}}" class="modal fade" role="dialog">
+                              <div class="modal-dialog">
+                            
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Réclamation</h4>
+                                  </div>
+                                  <div class="modal-body">
+                                    <p>	{{qr.message_reponse}} </p>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                  </div>
+                                </div>
+                            
+                              </div>
+                            </div>
+                    		    
+                {% else %}
+                			
+            			 <div class="col-sm-6 commentaire question {% if i == 1 %} last-question {% endif %} ">
+                		   	    <div class="user-circle">Q{{i}}</div>
+                	   	          <div class="card h-100">
+                					  <div class="card-body">
+                					  	<div class="info">
+                					  		<ul>
+                					  			<li> {{qr.nom}} {{qr.prenom}} | <span style="font-size:12px;"> {{ qr.forma }}  ~ {{ qr.promo }} </span></li>
+                					  			<li class="date"> {{qr.created}} </li>
+                					  		</ul>
+                					  	</div>
+                					     <div class="content">
+                					         
+                    					     		{% if  qr.message|length > 205  %} 
+                    					     			{{qr.message |slice(0, 205)}} 
+                    					     			<a class="lire-suite" data-toggle="modal" data-target="#{{ 'mymodal'  ~ qr.id_reclamation}}">... lire la suite</a>
+                    					     		{% else %}
+                    					     			<div style="font-weight:bold; letter-spacing:0.7px; padding-bottom:2px;"> {{qr.objet}} </div>
+                    					             	{{qr.message}} 
+                    					     		{% endif %}
+                					     </div>
+                					     <div class="piece"> 
+                					        {% if  qr.piece is not empty %}
+                        					        {% set pieces = qr.piece |split('|') %}
+                                                    {% for piece in pieces %}
+                                                            {% set exts = piece |split('.') %}
+                                                            {#{% for ext in exts %}#}
+                                                            
+                                                                   
+                                                                   
+                                                            {#{% endfor %}#}
+                                                             {% if piece != null %}
+                                                                <a href="{{ asset('uploads/filesReclamation/' ~ piece ) }}" target="_blank" id="PJ">{% if  exts[1] |lower  == 'tif' or  exts[1] |lower  == 'png' or exts[1] |lower  == 'jpg' or exts[1] |lower  == 'gif' or exts[1] |lower  == 'jpeg' or exts[1] |lower  == 'tiff' %}
+                                                                      <i class="fa fa-file-image-o"></i>
+                                                                    {% elseif exts[1] |lower == 'pdf' %}
+                                                                      <i class="fa fa-file-pdf-o"></i>
+                                                                   {% elseif exts[1] |lower == 'xlsx' or exts[1] |lower == 'xlsx' or exts[1] |lower == 'xlsm' or exts[1] |lower == 'xlsb' or exts[1] |lower == 'xls' or exts[1] |lower == 'xlam' %}
+                                                                      <i class="fa fa-file-excel-o"></i>
+                                                                   {% else %}      
+                                                                   <i class="fa fa-file"></i>
+                                                                   {% endif %} </a>
+                                                             {% endif %}
+                                                            
+                                                            
+                                                    {% endfor %}
+                                                    
+                                            {% endif %}
+                                                            					    
+                                        </div>
+                					  </div>
+                				  </div>
+            		      </div> 
+    		              
+    		              
+    		      
+            		      <!-- ---------------------------------------------------------------->
+            					  
+            					  	
+            			 <div class="col-sm-6 commentaire reponse  justify-reponse {% if i == 1 %} last-reponse {% endif %}"  id="{{'col'  ~  qr.id_reclamation}}">
+            			    
+    	   	                   <div class="card" style="position:relative;">
+            					    <div class="card-body reponse-hide">
+            					      <div class="content en-attente">
+                					    	<div>
+                					    		 <i class="fa fa-reply" ></i> 
+                					     	</div>
+                					     	<div class="QE">
+                					     	     Repondre
+                					     	</div>   	
+            					      </div>
+            					    
+            				        {#<div style="position: absolute; right:-8px; box-shadow: 0 1px 6px rgba(57,73,76,.35); #}
+            					       {# bottom:-8px; background-color: #428BCA; padding: 2px 4px; border-radius: 50%; border: 1px #428BCA solid; ">#}
+            					       {#      <i class="fa fa-reply" ></i> #}
+            				        {#</div>#}
+            					    
+            					  </div>
+            					  <textarea  class="area-enseignant-reponse" name="message" ></textarea>
+            				  </div>
+    		              </div> 
+            	{% endif %}
+                 
+                 		     	
+        </div>
+             
+            <div class="row">
+                <div class=" {% if i == 1 %} button-envoyer-left-last {% elseif i != 1 %} button-envoyer-left {% endif %} col-sm-6 " >
+                       
+                </div>
+                <div class="{% if i == 1 %} button-envoyer-right-last {% elseif i != 1%} button-envoyer-right {% endif %}  button-reponse col-sm-6  {{'col'  ~  qr.id_reclamation}}" >
+                      <button type="submit" class="btn btn-primary btn-sm {{'button'  ~  qr.id_reclamation}}" >
+                          <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                      Envonyer</button>		      
+                </div>
+            </div>
+        
+                <!-- Modal -->
+                <div id="{{ 'mymodal'  ~ qr.id_reclamation}}" class="modal fade" role="dialog">
+                  <div class="modal-dialog">
+                
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Reclamation{{i}}</h4>
+                      </div>
+                      <div class="modal-body">
+                              <p>	{{qr.message}} </p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                
+                  </div>
+                </div>
+    		      
+            </form>
+                 
+                  {% set i = i - 1 %}
+        {% endfor %}
