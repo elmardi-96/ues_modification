@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller {
 
@@ -30,11 +31,7 @@ class DefaultController extends Controller {
           // return $this->render('enseignant/index.html.twig');
              return $this->redirectToRoute('admin_reclamation');
         }
-        
-        elseif ($this->get('security.authorization_checker')->isGranted('ROLE_OBSERVATEUR')) {
-            // ADD By Moumni Amine SI
-               return $this->redirectToRoute('observation_users');
-          }
+
 
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', [
@@ -50,5 +47,16 @@ class DefaultController extends Controller {
 
         return $this->render('enseignant/index.html.twig');
     }
+
+    /**
+     * @Route("/question/test", name="test")
+     */
+    public function testAction(Request $request) {
+
+        return $this->render('enseignant/index.html.twig');
+    }
+
+
+    
 
 }

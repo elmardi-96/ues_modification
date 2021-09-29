@@ -124,14 +124,18 @@ class QuestionReponseController extends Controller {
         
         if($type==0){
         
-                 $sql="select ac_module.id,ac_module.code,ac_module.designation from t_admission 
+            $sql="select ac_module.id,ac_module.code, ac_module.designation 
+              from t_admission 
               JOIN t_inscription on t_admission.code = t_inscription.code_admission 
               JOIN ac_annee on t_inscription.code_annee = ac_annee.code 
               JOIN ac_formation on ac_annee.code_formation = ac_formation.code 
               JOIN ac_promotion on ac_formation.code = ac_promotion.code_formation and t_inscription.code_promotion = ac_promotion.code
               JOIN ac_semestre on ac_promotion.code = ac_semestre.code_promotion 
               JOIN ac_module on ac_semestre.code = ac_module.code_semestre 
-              where ac_annee.cloture_academique='non' and ac_module.type ='N' and t_admission.code='".$userx."' and ac_module.active=1 and ac_semestre.designation in ('Semestre 2','Semestre 4','Semestre 6', 'Semestre 8', 'Semestre 10', 'Semestre 12', 'Semestre 14')";
+              where ac_annee.cloture_academique='non' and ac_module.type ='N' and t_admission.code='".$userx."
+              ' and ac_module.active=1 and ac_semestre.designation in ('Semestre 2','Semestre 4','Semestre 
+              6', 'Semestre 8', 'Semestre 10', 'Semestre 12', 'Semestre 14')";
+
 }else if($type==1){
     $sql="SELECT mdl.id,mdl.designation FROM ac_module mdl inner join ac_semestre sem on sem.code = mdl.code_semestre inner join pr_programmation pr on sem.code = pr.id_semestre and pr.id_module = mdl.code inner join ac_annee ann on pr.id_annee = ann.code inner join pr_progens pre on pre.code_prog = pr.code where ann.cloture_academique='non' and mdl.type ='N' and mdl.active=1 and pre.code_enseignant='".$userx."' and sem.designation in ('Semestre 2','Semestre 4','Semestre 6', 'Semestre 8', 'Semestre 10', 'Semestre 12', 'Semestre 14')";
 }

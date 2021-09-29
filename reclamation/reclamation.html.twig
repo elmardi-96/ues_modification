@@ -4,6 +4,12 @@
 {% block body %}
     
 <style> 
+        .affecter-alert{
+            display: none;
+        }
+        .affecter-alert-success{
+            display: none;
+        }
         .test .piece{
             padding: 0px 30px;
             color: black;
@@ -221,6 +227,9 @@
         .test .info{
         	width: 100%;
         	background-color: white;
+            line-height: 1;
+            height: 27px;
+            padding-top: 3px
         }
         .test ul{
         	width: 100%;
@@ -330,6 +339,7 @@ margin-left:10px;
     
 {{ include ('inc/etudiant_header.html.twig')}}
 
+ 
  <div class="test">
 	 <!------------------------------- row ----------------------------------------->
 	 
@@ -340,7 +350,7 @@ margin-left:10px;
         				   <option id="Tout" value="Tout">Tout</option>
                                    <option id='Repondu' value="Repondu" >Répondu</option>
                 				   <option id='NonRepondu' value="NonRepondu" >Non Répondu</option>
-        				 </select>
+        				</select>
             		</div>
             		<div class="col-xs-3">
                 		    <input type="text-box" placeholder="Rechercher par ID" id="searchById" class="search2" />
@@ -355,18 +365,34 @@ margin-left:10px;
             		</div>
                        
            </div>
+
+ 
+
+
 	<div class="content mainC" >
 
 	      <div class="row" style="margin-top: 15px;">
 	          <div class="col-sm-6 questions-etudiants">
 	              DEMANDE / RECLAMATION ETUDIANT
+                    {% if   app.user.username  == 'reclamation' %}
+                        <button type="button" class="btn pull-right" 
+                            style="background-color: white !important; color:#B15682 !important; "  data-toggle="modal" data-target="#affecter">
+                            <i class="fa fa-list"></i> Affecter
+                        </button>
+                    {% endif %}
 	          </div>
 	          <div class="col-sm-6 reponses-enseignants">
-	              RETOUR SERVICE AFFAIRES ESTUDIANTINES
+	                RETOUR SERVICE AFFAIRES ESTUDIANTINES
+                    {% if   app.user.username  == 'reclamation' %}
+                        <button type="button" class="btn pull-right"  id="valider-reponse"
+                            style="background-color: white !important; color:#2C7659 !important; ">
+                            <i class="fa fa-check-square" style="font-size: 14px;"></i> Valider
+                        </button>
+                    {% endif %}
 	          </div>
 	      </div>
 	      
-		{% set i = reclamations|length %}
+		{% set i = reclamations_lenght|length %}
   
         {% for qr in reclamations %}
         
@@ -386,7 +412,16 @@ margin-left:10px;
                 					  	<div class="info">
                 					  		<ul>
                 					  			<li> {{qr.nom}} {{qr.prenom}} | <span style="font-size:12px;"> {{ qr.forma }}  ~ {{ qr.promo }} </span> </li>
-                					  			<li class="date"> {{qr.created}} </li>
+                					  			<li class="date"> 
+                                                        <span> {{qr.created}} </span> 
+                                                        <!-- {% if qr.service is empty  %}
+                                                            <span class="form-group form-check p-2">  
+                                                                -  <input type="checkbox" name="type" style="padding-top:20px;" class="form-check-input m-2 p-0" id="{{qr.id_reclamation}}" value="{{qr.id_reclamation}}">
+                                                            </span>
+                                                        {% endif %} -->
+                                                        
+                                                       
+                                                 </li>
                 					  		</ul>
                 					  	</div>
                 					     <div class="content">
@@ -456,7 +491,16 @@ margin-left:10px;
                     					  	<div class="info">
                     					  		<ul>
                     					  			<li> {{qr.username}} </li>
-                    					  			<li class="date">{{qr.created}}</li>
+                    					  			<li class="date">
+                                                          {{qr.created}} 
+                                                            {% if qr.valider == 1  %}
+                                                                - <i class="fa fa-check-square"  style="color: #2C7659; font-size: 13px;"></i>
+                                                            {% else %}
+                                                                <span class="form-group form-check p-2">  
+                                                                    - <input type="checkbox" name="valider"  style="padding-top:20px;" class="form-check-input m-2 p-0" id="{{qr.id_reclamation_reponse}}" value="{{qr.id_reclamation_reponse}}">
+                                                                </span>
+                                                            {% endif %}
+                                                     </li>
                     					  		</ul>
                     					  	</div>
                     					     <div class="content">
@@ -507,7 +551,21 @@ margin-left:10px;
                 					  	<div class="info">
                 					  		<ul>
                 					  			<li> {{qr.nom}} {{qr.prenom}} | <span style="font-size:12px;"> {{ qr.forma }}  ~ {{ qr.promo }} </span></li>
-                					  			<li class="date"> {{qr.created}} </li>
+                					  			<li class="date">
+                                                    <span> {{qr.created}} </span>
+                                                    {% if   app.user.username  == 'reclamation' %}
+
+                                                        {% if qr.service is empty  %}
+                                                            <span class="form-group form-check p-2">  
+                                                                - <input type="checkbox" name="type"  style="padding-top:20px;" class="form-check-input m-2 p-0" id="{{qr.id_reclamation}}" value="{{qr.id_reclamation}}">
+                                                            </span>
+                                                        {% else %}
+                                                                - <i class="fa fa-check-square" style="font-size: 13px; color: #B15682;"></i>
+                                                        {% endif %}
+                                                        
+                                                    {% endif %}
+
+                                                </li>
                 					  		</ul>
                 					  	</div>
                 					     <div class="content">
@@ -627,6 +685,42 @@ margin-left:10px;
 </div>
 
 
+<!----------------- modal affecter ------------------------------>
+  <!-- Modal -->
+  <div class="modal fade" id="affecter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Services</h4>
+        </div>
+        <div class="modal-body">       
+                <div class="alert alert-danger affecter-alert" role="alert"></div>
+                <div class="alert alert-success affecter-alert-success" role="alert">les réclamations sont bien affctés au service séléctioné </div>
+                <select class="form-control" id="services" placeholder="veuillez chisir un service">
+                    <option value="service" class="service">veuillez choisir un service</option>
+                    {% for user in fos_user %}
+                        <option value="{{user.id}}">{{user.email_canonical}}  </option>
+                    {% endfor %}
+                </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn  btn-danger" data-dismiss="modal">Close</button>
+          <button type="button" id="affecter-enregistrer" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!----------------- modal affecter ------------------------------>
+
+<div class="container text-center">  
+    <button class="btn btn-primary  voir-plus"> 
+            Voir plus
+    </button>
+</div>
+
+
+
 {% endblock %}
 
 
@@ -714,14 +808,14 @@ margin-left:10px;
             });
           });
           
-    $("body").on("keyup", "#search", function () {
-      var value = $(this).val().toLowerCase();
-      $(".ui.form").filter(function () {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-      });
-    });
+        $("body").on("keyup", "#search", function () {
+            var value = $(this).val().toLowerCase();
+            $(".ui.form").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
     
-              $("body").on('click','#annuler',function(){
+        $("body").on('click','#annuler',function(){
            var id=$(this).find("input[name='annuler']").val();
             $.ajax({
                 type:'POST',
@@ -731,8 +825,117 @@ margin-left:10px;
                     location.reload();
                 }
             });
-          });
+        });
+        
+        var page = 0;
+        var scroll = 15000;
+        $(".voir-plus").on('click',function(){
+            
+            page = page +100;
+            var s = Math.floor($(window).scrollTop()) - 115;
+            $.ajax({
+                type:'POST',
+                url:"{{ path('voir_plus') }}",
+                data:{page:page},
+                success:function(html){
+                    $('.mainC').append(html); 
+                    window.scrollTo(0,s);
+                }
+            });
+            
+            
+        });  
+
+        $("body").on('click','#affecter-enregistrer',function(){
+            console.log($('#services').find(":selected").val());
+            var service = $('#services').find(":selected").val();
+            var reclamations= [];
+            $("input:checkbox[name=type]:checked").each(function(){
+                reclamations.push($(this).val());
+            });
+            var erreur = "";
+            if(reclamations.length == 0){
+                erreur = "veuillez sélectionner des réclamations </br>";
+            }
+            if(service == "service"){
+                erreur = erreur + "veuillez choisir un service";
+            }
+
+            console.log(reclamations);
+
+            if( erreur != ""){
+                $('.affecter-alert').html(erreur);
+                $('.affecter-alert').show();
+            }
+            else {
+                var formData = new FormData();
+                formData.append('reclamations', reclamations);
+                formData.append('service', service);
+                $.ajax({
+                    type:'POST',
+                    url:"{{ path('affecteToService') }}",
+                    data: formData,
+                    success:function(result){
+                        if(result  == 'ok'){
+                            $('.affecter-alert-success').show();
+                            $('.affecter-enregistrer').hide();
+                            setTimeout(function(){  location.reload();}, 2000);
+                           
+                        }
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false       
+
+                });
+            }
+            
+
+        });
+
+
+
+        $("body").on('click','#valider-reponse',function(){
+
+            var r = confirm("êtes-vous sûr de vouloir valider?");
+            if (r == true) {
+                      
+                    var Reponses = [];
+
+                    $("input:checkbox[name=valider]:checked").each(function(){
+                        Reponses.push($(this).val());
+                    });
+                    console.log( Reponses);
+                    var formData = new FormData();
+                    formData.append('Reponses', Reponses);
+
+                    $.ajax({
+                        type:'POST',
+                        url:"{{ path('validerReclamation') }}",
+                        data: formData,
+                        success:function(result){
+                            if(result  == 'ok'){
+                                location.reload();
+                            }
+                        },
+                        cache: false,
+                        contentType: false,
+                        processData: false       
+
+                    });            
+                
+            } else {
+                txt = "You pressed Cancel!";
+            }
           
+            
+
+        });
+
+
+
+        
+
     </script>  
 
 

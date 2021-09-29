@@ -383,31 +383,51 @@
             		      
             		      <!-- -------------------------------------------------------------- -->
             					  
-            					  		    
-                		 <div class="col-sm-6 commentaire reponse reponse-juste  {% if i == 1 %} last-reponse {% endif %}" >
-                		     
-            		   	  	     <div class="user-circle">R{{i}}</div>
-            	   	             <div class="card">
-                    					  <div class="card-body">
-                    					  	<div class="info">
-                    					  		<ul>
-                    					  			<li> {{qr.username}} </li>
-                    					  			<li class="date">{{qr.created}}</li>
-                    					  		</ul>
-                    					  	</div>
-                    					     <div class="content">
-                            					     		
-                    					     		{% if  qr.message_reponse|length > 205  %} 
-                    					     			{{qr.message_reponse |slice(0, 205)}} 
-                    					     			<a class="lire-suite" data-toggle="modal" data-target="#{{ 'reponse'  ~ qr.id_reclamation}}">... lire la suite</a>
-                    					     		{% else %}
-                    					             	{{qr.message_reponse}} 
-                    					     		{% endif %}
-                    					     </div>
-                    					     
-                    					  </div>
-            				     </div>
-        		         </div> 
+            					{% if qr.valider ==  1%}  		    
+                        <div class="col-sm-6 commentaire reponse reponse-juste  {% if i == 1 %} last-reponse {% endif %}" >
+                            
+                                <div class="user-circle">R{{i}}</div>
+                                  <div class="card">
+                                    <div class="card-body">
+                                      <div class="info">
+                                        <ul>
+                                          <li> {{qr.username}} </li>
+                                          <li class="date">{{qr.created}}</li>
+                                        </ul>
+                                      </div>
+                                      <div class="content">
+                                                  
+                                          {% if  qr.message_reponse|length > 205  %} 
+                                            {{qr.message_reponse |slice(0, 205)}} 
+                                            <a class="lire-suite" data-toggle="modal" data-target="#{{ 'reponse'  ~ qr.id_reclamation}}">... lire la suite</a>
+                                          {% else %}
+                                                {{qr.message_reponse}} 
+                                          {% endif %}
+                                      </div>
+                                      
+                                    </div>
+                            </div>
+                        </div> 
+
+            					{% else %}  		    
+        
+                        	<div class="col-sm-6 commentaire reponse justify-reponse {% if i == 1 %} last-reponse {% endif %} ">
+                            <div class="card">
+                                <div class="card-body">
+
+                                    <div class="content en-attente">
+                                      <div>
+                                        <i class="fa fa-paper-plane"></i>
+                                      </div>
+                                      <div class="QE">
+                                        Réclamation envoyée ...
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                          </div> 
+
+            					{% endif %}  		    
         		          
         		            <!-- Modal -->
                             <div id="{{ 'reponse'  ~ qr.id_reclamation}}" class="modal fade" role="dialog">
@@ -510,20 +530,20 @@
         					  	
         			<div class="col-sm-6 commentaire reponse justify-reponse {% if i == 1 %} last-reponse {% endif %} ">
 	   	          <div class="card">
-					  <div class="card-body">
+                    <div class="card-body">
 
-					     <div class="content en-attente">
-					     	<div>
-					     		<i class="fa fa-paper-plane"></i>
-					     	</div>
-					     	<div class="QE">
-					     		Réclamation envoyée ...
-					     	</div>
-					     	
-					     </div>
-					  </div>
-				  </div>
-		      </div> 
+                        <div class="content en-attente">
+                          <div>
+                            <i class="fa fa-paper-plane"></i>
+                          </div>
+                          <div class="QE">
+                            Réclamation envoyée ...
+                          </div>
+                          
+                        </div>
+                    </div>
+				        </div>
+		          </div> 
         {% endif %}
         					     	
 </div>
