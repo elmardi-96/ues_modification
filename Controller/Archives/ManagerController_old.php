@@ -1,17 +1,16 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Archives;
 
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Major;
 use AppBundle\Service\FileUploader3;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
@@ -19,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  *
  * @Route("management")
  */
-class ManagerController extends Controller {
+class ManagerController_old extends Controller {
 
     /**
      * 
@@ -73,21 +72,19 @@ class ManagerController extends Controller {
      */
     public function action() {
 
-        // $sql = "SELECT id, utilisateur,  info_valide, nom, prenom FROM t_etudiant1 where info_valide = 1";
+        $sql = "SELECT id, utilisateur,  info_valide, nom, prenom FROM t_etudiant1 where info_valide = 1";
 
-        // //$totalRows .= $sql;
-        // //  $sqlRequest .= $sql;
+        //$totalRows .= $sql;
+        //  $sqlRequest .= $sql;
 
 
-        // $stmt = $this->getDoctrine()->getEntityManager()->getConnection()->prepare($sql);
-        // $stmt->execute();
-        // $result = $stmt->fetchAll();
-        $em   = $this->getDoctrine()->getManager();
-        $etudiant  = $em->getRepository('AppBundle:TEtudiantInfo')->findBy(['inscriptionValide' => 1]);
-        
+        $stmt = $this->getDoctrine()->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+
         $data = array();
 
-        foreach ($etudiant as $key => $row) {
+        foreach ($result as $key => $row) {
 
             $nestedData = array();
             $nestedData[] = ++$key;
@@ -95,19 +92,19 @@ class ManagerController extends Controller {
 
 
             
-            $cd = $row->getId();
+            $cd = $row['id'];
 
-
-            $nestedData[] = $row->getId();
-            $nestedData[] = $row->getUtilisateur();
-            $nestedData[] = $row->getNom();
-            $nestedData[] = $row->getPrenom();           
+            $nestedData[] = $row['id'];
+            $nestedData[] = $row['utilisateur'];
+            $nestedData[] = $row['nom'];
+            $nestedData[] = $row['prenom'];            
             $nestedData[] = "<a class='openModel' data-id='".$cd."'><i  class='btn btn-xs btn-primary ace-icon fa fa-plus bigger-120'></i></a>";
 
             $nestedData["DT_RowId"] = $cd;
 
             $data[] = $nestedData;
         }
+
         $json_data = array(
             "data" => $data   // total data array
         );
@@ -121,86 +118,13 @@ class ManagerController extends Controller {
      * @Route("/users/validation/getetudiant/{id}" , name="get_etudiant")
      */
     public function updateStatut(Request $request, $id) {
-        $em   = $this->getDoctrine()->getManager();
-        $e  = $em->getRepository('AppBundle:TEtudiantInfo')->find($id);
-        
-        $result = [];
-            array_push($result, array(
-                "id" => $e->getId(),
-                "code" => $e->getCode(),
-                "codeCab" => $e->getCode(),
-                "inscriptionValide" => $e->getInscriptionValide(),
-                "nom" => $e->getNom(),
-                "prenom" => $e->getPrenom(),
-                "NomAr" => $e->getNomAr(),
-                "PrenomAr" => $e->getPrenomAr(),
-                "urlImage" => $e->getUrlImage(),
-                "titre" => $e->getTitre(),
-                "date_naissance" => date_format($e->getDateNaissance(), "d/m/Y"),
-                "lieu_naissance" => $e->getLieuNaissance(),
-                "sexe" => $e->getSexe(),
-                "st_famille" => $e->getStFamille(),
-                "st_famille_parent" => $e->getStFamilleParent(),
-                "nationalite" => $e->getNationalite(),
-                "cin" => $e->getCin(),
-                "passeport" => $e->getPasseport(),
-                "adresse" => $e->getAdresse(),
-                "ville" => $e->getVille(),
-                "tel1" => $e->getTel1(),
-                "tel2" => $e->getTel2(),
-                "tel3" => $e->getTel3(),
-                "mail1" => $e->getMail1(),
-                "mail2" => $e->getMail2(),
-                "nom_p" => $e->getNomP(),
-                "prenom_p" => $e->getPrenomP(),
-                "nationalite_p" => $e->getNationaliteP(),
-                "profession_p" => $e->getProfessionP(),
-                "employe_p" => $e->getEmployeP(),
-                "categorie_p" => $e->getCategorieP(),
-                "tel_p" => $e->getTelP(),
-                "mail_p" => $e->getMailP(),
-                "salaire_p" => $e->getSalaireP(),
-                "nom_m" => $e->getNomM(),
-                "prenom_m" => $e->getPrenomM(),
-                "nationalite_m" => $e->getNationaliteM(),
-                "profession_m" => $e->getProfessionM(),
-                "employe_m" => $e->getEmployeM(),
-                "categorie_m" => $e->getCategorieM(),
-                "tel_m" => $e->getTelM(),
-                "mail_m" => $e->getMailM(),
-                "salaire_m" => $e->getSalaireM(),
-                "cne" => $e->getCne(),
-                "etablissement" => $e->getEtablissement(),
-                "annee_bac" => $e->getAnneeBac(),
-                "moyenne_bac" => $e->getMoyenneBac(),
-                "concoursMedbup" => $e->getConcoursMedbup(),
-                "obs" => $e->getObs(),
-                "categoriePreinscription" => $e->getCategoriePreinscription(),
-                "fraisPreinscription" => $e->getFraisPreinscription(),
-                "bourse" => $e->getBourse(),
-                "logement" => $e->getLogement(),
-                "parking" => $e->getParking(),
-                "statut" => $e->getStatut(),
-                "actif" => $e->getActif(),
-                "codeOrganisme" => $e->getCodeOrganisme(),
-                "nombreEnfants" => $e->getNombreEnfants(),
-                "nombreFreres" => $e->getNombreFreres(),
-                "categorieListe" => $e->getCategorieListe(),
-                "admissionListe" => $e->getAdmissionListe(),
-                "teleListe" => $e->getTeleListe(),
-                "statutDeliberation" => $e->getStatutDeliberation(),
-                "dateCreation" => $e->getDateCreation(),
-                "utilisateur" => $e->getUtilisateur(),
-                "idNatureDemande" => $e->getIdNatureDemande(),
-                "id_type_bac" => $e->getIdTypeBac(),
-                "id_academie" => $e->getIdAcademie(),
-                "langueC" => $e->getLangueC(),
-                "id_filiere" => $e->getIdFiliere(),
+        $sql = "SELECT * FROM t_etudiant1 where id = " .$id. "";
 
-            ));
-    
-            return new Response(json_encode($result));
-        
+        $stmt = $this->getDoctrine()->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetch();
+
+        return new Response(json_encode($result));
     }
     
 
@@ -208,22 +132,24 @@ class ManagerController extends Controller {
      * @Route("/users/validation/{id}" , name="validate_etudiant")
      */
     public function validation(Request $request, $id) {
-        $em   = $this->getDoctrine()->getManager();
-        $etudiant  = $em->getRepository('AppBundle:TEtudiantInfo')->find($id);
-        $etudiant->setInscriptionValide(2);
-        $em->persist($etudiant);
-        try {
-            $em->flush();
-            return new JsonResponse(["message"=>"Le compte a bien été validé"],200);
+        $sql = "UPDATE t_etudiant1  SET info_valide = 2 where id = " .$id. "";
+        $stmt = $this->getDoctrine()->getEntityManager()->getConnection()->prepare($sql);
+        $stmt->execute();
+        if($stmt->execute()) {
+
+            return new JsonResponse(["message"=>"Etudiant Bien Validé"],200);
         }
-        catch (\Throwable $th) {
-            return new JsonResponse(["message"=>"Veuillez contacter l'administrateur"],400);
+        else {
+            return new JsonResponse(["message"=>"Veuillez contacté l'administrateur"],400);
         }
     }
     /**
-     * @Route("/users/validation/deblock/{id}/{observation}" , name="deblock_etudiant")
+     * @Route("/users/validation/deblock" , name="deblock_etudiant")
      */
-    public function deblock(Request $request, $id, $observation) {
+    public function deblock(Request $request) {
+
+        $id = json_decode($request->getContent(), true)['id'];
+        $observation = json_decode($request->getContent(), true)['observation'];
 
         $em   = $this->getDoctrine()->getManager();
         
@@ -234,9 +160,9 @@ class ManagerController extends Controller {
         $em->persist($etudiant);
         try {
             $em->flush();
-            return new JsonResponse(["message"=>"Le compte a bien été débloqué"],200);
+            return new JsonResponse(["message"=>"Etudiant Bien Deblock"],200);
         } catch (\Throwable $th) {
-            return new JsonResponse(["message"=>"Veuillez contacter l'administrateur"],400);
+            return new JsonResponse(["message"=>"Veuillez contacté l'administrateur"],400);
         }  
         
         

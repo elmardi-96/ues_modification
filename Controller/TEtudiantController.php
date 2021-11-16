@@ -104,7 +104,7 @@ class TEtudiantController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $inscription = $em->getRepository('AppBundle:TEtudiant')->GetInsCriptionActiveAnnee($user->getEtudiant()->getId());
 
-         //   dump($inscription); die();
+            // dump($user->getEtudiant()->getId()); die();
         $em = $this->getDoctrine()->getManager();
         $dql = "SELECT a FROM AppBundle:Notification a where a.etablissement is null or  a.promotion = " . $inscription->getPromotion()->getId() . " or a.formation = " . $inscription->getPromotion()->getFormation()->getId() . "or  a.etablissement = " . $inscription->getPromotion()->getFormation()->getEtablissement()->getId() . " order by a.id desc ";
 
@@ -484,9 +484,8 @@ class TEtudiantController extends Controller {
 
         return $this->render('etudiant/programme.html.twig', array('inscription' => $inscription, 'result' => $result, 'formation' => $formation, 'semestres_programme' => array_unique($s), 'modules_programme' => array_unique($m), 'elements_programme' => array_unique($e)));
     }
-    
 
-     /**
+    /**
      * Displays examen informations
      *
      * @Route("/programme/pedagogique/{code_element}", options = { "expose" = true } ,name="etudiant_programme_pedagogique")
@@ -517,9 +516,8 @@ class TEtudiantController extends Controller {
 //                    'annee' => $annee
         ));
     }
-
-
-
+    
+    
     /**
      * Displays service informations
      *
@@ -537,7 +535,8 @@ class TEtudiantController extends Controller {
         if ($this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
         }
-
+        // dump($user->getEtudiant()->getId(), 
+        // $user->getUsername());die;
         $em = $this->getDoctrine()->getManager();
         $inscription = $em->getRepository('AppBundle:TEtudiant')->GetInsCriptionActiveAnneeByIDAndCodeAdmission($user->getEtudiant()->getId(), 
         $user->getUsername());
@@ -553,6 +552,7 @@ class TEtudiantController extends Controller {
 
 
         $em = $this->getDoctrine()->getManager();
+        // dump($inscription);die;
         $formation = $em->getRepository('AppBundle:AcFormation')->find($inscription->getPromotion()->getFormation());
 
 
@@ -604,6 +604,8 @@ class TEtudiantController extends Controller {
         // dd($req);
         return $this->render('etudiant/video_pedagogique.html.twig', array('data' => $data, ));
     }
+
+
 
     /**
      *
@@ -728,7 +730,7 @@ class TEtudiantController extends Controller {
 
 
         $em = $this->getDoctrine()->getManager();
-        $infos = $em->getRepository('AppBundle:TEtudiant')->GetInsCriptionActiveAnneeByIDAndCodeAdmission($user->      getEtudiant()->getId(), $user->getUserName());
+        $infos = $em->getRepository('AppBundle:TEtudiant')->GetInsCriptionActiveAnneeByIDAndCodeAdmission($user->getEtudiant()->getId(), $user->getUserName());
 
 
         $repository = $this->getDoctrine()->getRepository('AppBundle:TInscription');

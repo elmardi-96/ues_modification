@@ -93,7 +93,7 @@ class NewapiController extends Controller {
     public function ModuleAction($id) {
 
            
-        $sql = "select * from ac_module where semestre_id=".intval($id);
+        $sql = "select * from ac_module where active = 1 and semestre_id=".intval($id);
 
 
         $stmt = $this->getDoctrine()->getConnection()->prepare($sql);
@@ -111,33 +111,7 @@ class NewapiController extends Controller {
     public function ElementAction($id) {
 
            
-        $sql = "select * from ac_element where module_id=".intval($id);
-
-        $stmt = $this->getDoctrine()->getConnection()->prepare($sql);
-        $stmt->execute();
-        $data = $stmt->fetchAll();
-
-        return self::ResponseApi($data);
-  
-      
-    }
-
-
-    /**
-     * @Route("/api/linkAws/{id}", name="linkAws")
-     */
-    public function linkAwsAction($id) {
-
-           
-        $sql = "select  ac_etablissement.abreviation as etablissement,ac_formation.abreviation as formation,
-                        ac_promotion.ordre,ac_element.code
-              from ac_etablissement
-              JOIN ac_formation on ac_etablissement.id = ac_formation.etablissement_id
-              JOIN ac_promotion on ac_formation.id     = ac_promotion.formation_id 
-              JOIN ac_semestre on ac_promotion.id      = ac_semestre.promotion_id
-              JOIN ac_module on ac_semestre.id         = ac_module.semestre_id
-              JOIN ac_element on ac_module.id          = ac_element.module_id
-              where  ac_element.id =".intval($id);
+        $sql = "select * from ac_element where active = 1 and module_id=".intval($id);
 
         $stmt = $this->getDoctrine()->getConnection()->prepare($sql);
         $stmt->execute();
