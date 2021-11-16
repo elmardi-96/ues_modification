@@ -8,7 +8,7 @@
 	          </div>
 	      </div>
 
-{% set i = reclamations|length %}
+		{% set i = reclamations_lenght|length %} 
   
         {% for qr in reclamations %}
         
@@ -51,6 +51,7 @@
                         					     	    	    	{% endif %}
                     					     			</div>
                 					                	{{qr.message}} 
+                					                	{{qr.piece}}
                 					     		{% endif %}
                 					     </div>
                 					      <div class="piece"> 
@@ -97,7 +98,16 @@
                     					  	<div class="info">
                     					  		<ul>
                     					  			<li> {{qr.username}} </li>
-                    					  			<li class="date">{{qr.created}}</li>
+                    					  			<li class="date">
+                    					  			     {{qr.created}}
+                    					  			      {% if qr.valider == 1  %}
+                                                                - <i class="fa fa-check-square"  style="color: #2C7659; font-size: 13px;"></i>
+                                                          {% else %}
+                                                                <span class="form-group form-check p-2">  
+                                                                    - <input type="checkbox" name="valider"  style="padding-top:20px;" class="form-check-input m-2 p-0" id="{{qr.id_reclamation_reponse}}" value="{{qr.id_reclamation_reponse}}">
+                                                                </span>
+                                                          {% endif %}
+                                                    </li>
                     					  		</ul>
                     					  	</div>
                     					     <div class="content">
@@ -113,6 +123,7 @@
                                                Annuler
                                               <input type="hidden" name="annuler" value=" {{qr.id_reclamation_reponse}}" />
                                              </div>
+
                     					  </div>
             				     </div>
         		         </div> 
@@ -131,7 +142,7 @@
                                     <p>	{{qr.message_reponse}} </p>
                                   </div>
                                   <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
                                   </div>
                                 </div>
                             
@@ -147,7 +158,29 @@
                 					  	<div class="info">
                 					  		<ul>
                 					  			<li> {{qr.nom}} {{qr.prenom}} | <span style="font-size:12px;"> {{ qr.forma }}  ~ {{ qr.promo }} </span></li>
-                					  			<li class="date"> {{qr.created}} </li>
+                					  			<li class="date">
+                                                     
+                                                    {% if   app.user.username  == 'reclamation' %}
+
+                                                        {% if qr.service is empty  %}
+                                                            {% if   app.user.username  == 'reclamation' %}
+                                                                <button type="button" class="p-0 m-0 affecter-button-modal {{qr.id_reclamation}}"
+                                                                    style="border:none; background-color: white !important; color:#B15682 !important; "  data-toggle="modal" data-target="#affecter">
+                                                                    <i class="fa fa-list"></i> Affecter
+                                                                </button>
+                                                            {% endif %}
+                                                            <span> {{qr.created}} </span>
+                                                            <span class="form-group form-check p-2 check-affectation  {{qr.id_reclamation}}">  
+                                                                - <input type="checkbox" name="type"  style="padding-top:20px;" class="form-check-input m-2 p-0" id="{{qr.id_reclamation}}" value="{{qr.id_reclamation}}">
+                                                            </span>
+                                                        {% else %}
+                                                                  <span> {{qr.created}} </span>
+                                                                - <i class="fa fa-check-square" style="font-size: 13px; color: #B15682;"></i>
+                                                        {% endif %}
+                                                        
+                                                    {% endif %}
+
+                                                </li>
                 					  		</ul>
                 					  	</div>
                 					     <div class="content">
@@ -189,6 +222,7 @@
                                                             					    
                                         </div>
                 					  </div>
+                					  
                 				  </div>
             		      </div> 
     		              
@@ -206,7 +240,7 @@
                 					    		 <i class="fa fa-reply" ></i> 
                 					     	</div>
                 					     	<div class="QE">
-                					     	     Repondre
+                					     	     Répondre
                 					     	</div>   	
             					      </div>
             					    
@@ -243,7 +277,7 @@
                     <div class="modal-content">
                       <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Reclamation{{i}}</h4>
+                        <h4 class="modal-title">Réclamation{{i}}</h4>
                       </div>
                       <div class="modal-body">
                               <p>	{{qr.message}} </p>

@@ -155,6 +155,7 @@
         	padding-right: 25px;
             padding-left: 25px;
             padding-top : 24px;
+            overflow: hidden;
             
             
             border-left: 1px #2C7659 solid;
@@ -213,7 +214,7 @@
            border: 4px white solid;
            text-align:center;
            padding-top: 10px;
-           font-size: 15px;
+           font-size: 11px;
            font-weight: bold;
            color: white;
         
@@ -229,8 +230,7 @@
         	background-color: white;
         	line-height: 1;
             height: 27px;
-            padding-top: 3px;
-            overflow: hidden;
+            padding-top: 3px
         }
         .test ul{
         	width: 100%;
@@ -253,7 +253,6 @@
         .test .content{
         	padding: 6px 30px;
             font-size:13px; 
-            overflow:hidden;
         }
         .test .en-attente{
         	text-align: center;
@@ -371,12 +370,7 @@ margin-left:10px;
 	      <div class="row" style="margin-top: 15px;">
 	          <div class="col-sm-6 questions-etudiants">
 	              DEMANDE / RECLAMATION ETUDIANT
-	                {#{% if   app.user.username  == 'reclamation' %}#}
-                 {#       <button type="button" class="btn pull-right" #}
-                 {#           style="background-color: white !important; color:#B15682 !important; "  data-toggle="modal" data-target="#affecter">#}
-                 {#           <i class="fa fa-list"></i> Affecter#}
-                 {#       </button>#}
-                 {#   {% endif %}#}
+	               
 	          </div>
 	          <div class="col-sm-6 reponses-enseignants">
 	              RETOUR SERVICE AFFAIRES ESTUDIANTINES
@@ -389,7 +383,7 @@ margin-left:10px;
 	          </div>
 	      </div>
 	      
-		{% set i = reclamations_lenght|length %}
+		{% set i = reclamations_lenght|length %} 
   
         {% for qr in reclamations %}
         
@@ -403,13 +397,14 @@ margin-left:10px;
                     {% if qr.id_reclamation_reponse != null %}
                     
         		   	     <div class="col-sm-6 commentaire question question-repondu {% if i == 1 %} last-question {% endif %}" >
-                		   	  	  <div class="user-circle">Q{{i}}</div>
+                		   	  	  <div class="user-circle" style="font-size:12px; padding: 3px;">Q{{i}}</div>
                 	   	          <div class="card h-100">
                 					  <div class="card-body">
                 					  	<div class="info">
                 					  		<ul>
                 					  			<li> {{qr.nom}} {{qr.prenom}} | <span style="font-size:12px;"> {{ qr.forma }}  ~ {{ qr.promo }} </span> </li>
-                					  			<li class="date"> {{qr.created}} </li>
+                					  			<li class="date">
+                                                       {{qr.created}} </li>
                 					  		</ul>
                 					  	</div>
                 					     <div class="content">
@@ -544,18 +539,18 @@ margin-left:10px;
                                                     {% if   app.user.username  == 'reclamation' %}
 
                                                         {% if qr.service is empty  %}
-                                                             {% if   app.user.username  == 'reclamation' %}
+                                                            {% if   app.user.username  == 'reclamation' %}
                                                                 <button type="button" class="p-0 m-0 affecter-button-modal {{qr.id_reclamation}}"
                                                                     style="border:none; background-color: white !important; color:#B15682 !important; "  data-toggle="modal" data-target="#affecter">
                                                                     <i class="fa fa-list"></i> Affecter
                                                                 </button>
                                                             {% endif %}
                                                             <span> {{qr.created}} </span>
-                                                            <span class="form-group form-check p-2 check-affectation {{qr.id_reclamation}}">  
+                                                            <span class="form-group form-check p-2 check-affectation  {{qr.id_reclamation}}">  
                                                                 - <input type="checkbox" name="type"  style="padding-top:20px;" class="form-check-input m-2 p-0" id="{{qr.id_reclamation}}" value="{{qr.id_reclamation}}">
                                                             </span>
                                                         {% else %}
-                                                                <span> {{qr.created}} </span>
+                                                                  <span> {{qr.created}} </span>
                                                                 - <i class="fa fa-check-square" style="font-size: 13px; color: #B15682;"></i>
                                                         {% endif %}
                                                         
@@ -691,11 +686,11 @@ margin-left:10px;
         </div>
         <div class="modal-body">       
                 <div class="alert alert-danger affecter-alert" role="alert"></div>
-                <div class="alert alert-success affecter-alert-success" role="alert">les réclamations sont bien affctés au service séléctioné </div>
+                <!-- <div class="alert alert-success affecter-alert-success" role="alert">les réclamations sont bien affctés au service séléctioné </div> -->
                 <select class="form-control" id="services" placeholder="veuillez chisir un service">
                     <option value="service" class="service">veuillez choisir un service</option>
                     {% for user in fos_user %}
-                        <option value="{{user.id}}">{{user.username_canonical}}  </option>
+                        <option value="{{user.id}}">{{user.email_canonical}}  </option>
                     {% endfor %}
                 </select>
         </div>
@@ -764,10 +759,17 @@ margin-left:10px;
                 }
             });
           });
+
+          var idFilter  = "";
+          var page = 0;
           
           $("body").on('change','#filtre',function(){
-           var id=$(this).find('option:selected').attr('id');
+           
+            var id=$(this).find('option:selected').attr('id');
                               $('.alert-select').hide();
+            idFilter   = id;
+            page = 0
+
             $.ajax({
                 type:'POST',
                 url:"{{ path('filtre') }}",
@@ -776,6 +778,7 @@ margin-left:10px;
                     $('.mainC').empty().html(html); 
                 }
             });
+
           });
           
           $("body").on('click','#refresh',function(){
@@ -821,16 +824,18 @@ margin-left:10px;
             });
           });
           
-        var page = 0;
+        
+        
         var scroll = 15000;
         $(".voir-plus").on('click',function(){
             
             page = page +100;
             var s = Math.floor($(window).scrollTop()) - 115;
+            // console.log(idFilter);
             $.ajax({
                 type:'POST',
                 url:"{{ path('voir_plus') }}",
-                data:{page:page},
+                data:{page:page, idFilter:idFilter},
                 success:function(html){
                     $('.mainC').append(html); 
                     window.scrollTo(0,s);
@@ -839,55 +844,16 @@ margin-left:10px;
             
             
         });  
-          
-          
-          
-          
-        // $("body").on('click','#affecter-enregistrer',function(){
-            
-        //     console.log($('#services').find(":selected").val());
-        //     var service = $('#services').find(":selected").val();
-        //     var reclamations= [];
-        //     $("input:checkbox[name=type]:checked").each(function(){
-        //         reclamations.push($(this).val());
-        //     });
-        //     var erreur = "";
-        //     if(reclamations.length == 0){
-        //         erreur = "veuillez sélectionner des réclamations </br>";
-        //     }
-        //     if(service == "service"){
-        //         erreur = erreur + "veuillez choisir un service";
-        //     }
-        //     console.log(reclamations);
-        //     if( erreur != ""){
-        //         $('.affecter-alert').html(erreur);
-        //         $('.affecter-alert').show();
-        //     }
-        //     else {
-        //         var formData = new FormData();
-        //         formData.append('reclamations', reclamations);
-        //         formData.append('service', service);
-        //         $.ajax({
-        //             type:'POST',
-        //             url:"{{ path('affecteToService') }}",
-        //             data: formData,
-        //             success:function(result){
-        //                 if(result  == 'ok'){
-        //                     $('.affecter-alert-success').show();
-        //                     $('.affecter-enregistrer').hide();
-        //                     setTimeout(function(){  location.reload();}, 2000);
-                           
-        //                 }
-        //             },
-        //             cache: false,
-        //             contentType: false,
-        //             processData: false       
-        //         });
-        //     }
-            
-        // });
         
         
+        var classes;
+        $("body").on('click','.affecter-button-modal',function(){ 
+             classes = $(this).attr('class').split(/\s+/);
+        });
+            
+          
+          
+          
         $("body").on('click','#affecter-enregistrer',function(){
             
 

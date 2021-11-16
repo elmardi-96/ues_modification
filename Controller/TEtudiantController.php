@@ -535,8 +535,7 @@ class TEtudiantController extends Controller {
         if ($this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             $user = $this->container->get('security.token_storage')->getToken()->getUser();
         }
-        // dump($user->getEtudiant()->getId(), 
-        // $user->getUsername());die;
+
         $em = $this->getDoctrine()->getManager();
         $inscription = $em->getRepository('AppBundle:TEtudiant')->GetInsCriptionActiveAnneeByIDAndCodeAdmission($user->getEtudiant()->getId(), 
         $user->getUsername());
@@ -552,7 +551,6 @@ class TEtudiantController extends Controller {
 
 
         $em = $this->getDoctrine()->getManager();
-        // dump($inscription);die;
         $formation = $em->getRepository('AppBundle:AcFormation')->find($inscription->getPromotion()->getFormation());
 
 

@@ -159,22 +159,22 @@
                 					  		<ul>
                 					  			<li> {{qr.nom}} {{qr.prenom}} | <span style="font-size:12px;"> {{ qr.forma }}  ~ {{ qr.promo }} </span></li>
                 					  			<li class="date">
-                                                    {#<span> {{qr.created}} </span>#}
+                                                      
                                                     {% if   app.user.username  == 'reclamation' %}
 
                                                         {% if qr.service is empty  %}
-                                                           {% if   app.user.username  == 'reclamation' %}
+                                                            {% if   app.user.username  == 'reclamation' %}
                                                                 <button type="button" class="p-0 m-0 affecter-button-modal {{qr.id_reclamation}}"
                                                                     style="border:none; background-color: white !important; color:#B15682 !important; "  data-toggle="modal" data-target="#affecter">
                                                                     <i class="fa fa-list"></i> Affecter
                                                                 </button>
                                                             {% endif %}
                                                             <span> {{qr.created}} </span>
-                                                            <span class="form-group form-check p-2">  
+                                                            <span class="form-group form-check p-2 check-affectation  {{qr.id_reclamation}}">  
                                                                 - <input type="checkbox" name="type"  style="padding-top:20px;" class="form-check-input m-2 p-0" id="{{qr.id_reclamation}}" value="{{qr.id_reclamation}}">
                                                             </span>
                                                         {% else %}
-                                                                <span> {{qr.created}} </span>
+                                                                  <span> {{qr.created}} </span>
                                                                 - <i class="fa fa-check-square" style="font-size: 13px; color: #B15682;"></i>
                                                         {% endif %}
                                                         

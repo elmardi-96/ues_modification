@@ -35,6 +35,7 @@ use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -159,7 +160,7 @@ class ReclamationController extends Controller {
          return $this->redirectToRoute('homepage');
         }
     }
-    
+
     /**
      * @Route("/voir_plus", name="voir_plus")
      */
@@ -181,6 +182,17 @@ class ReclamationController extends Controller {
            if($username !=  "reclamation"){
                $service_sql = " and  R.service =".$user->getId() ;
            }
+
+           $idFilter = $request->request->get('idFilter');
+        //    var_dump($idFilter);
+
+           $Repondu = "";
+           $NRepondu = "";
+           if($idFilter=='Repondu'){
+                   $Repondu  = 'and RP.message IS NOT NULL';
+           }elseif($idFilter=='NonRepondu'){
+                   $NRepondu = 'and RP.message IS NULL'; 
+           }
    
          
            $sql = "select R.service as service , RP.valider as valider , R.id_reclamation as id_reclamation, R.message as message , R.object as objet ,DATE_FORMAT(R.created_at,'%d-%m-%Y %H:%i:%s') as created ,
@@ -196,7 +208,7 @@ class ReclamationController extends Controller {
            inner join t_etudiant on t_etudiant.id = etud.t_etudiant_id
            left join reclamation_reponse as RP on RP.fk_reclamation = R.id_reclamation and RP.active = 1
            left join fos_user as user_rec on RP.fk_user = user_rec.id 
-           where ac_annee.validation_academique = 'non' ".$service_sql."
+           where ac_annee.validation_academique = 'non' ".$service_sql." ".$NRepondu." ".$Repondu."
            order by R.id_reclamation desc";
    
             $stmt = $this->getDoctrine()->getConnection()->prepare($sql);
@@ -210,11 +222,14 @@ class ReclamationController extends Controller {
             $stmt = $this->getDoctrine()->getConnection()->prepare($sql1);
             $stmt->execute();
             $reclamations = $stmt->fetchAll();
+
+            $type = "voirPlus";
             
             return $this->render('reclamation/voirplus.html.twig', [
                    'reclamations'=>$reclamations,
                    'reclamations_lenght'=>$reclamations_lenght,
-                   'page' => $page
+                   'page' => $page,
+                   'type' => $type
             ]);
        }
        else{
@@ -469,72 +484,65 @@ class ReclamationController extends Controller {
      */
     public function filtre(Request $request) {
 
-            if($request->isXmlHttpRequest()) {
+        if($request->isXmlHttpRequest()) {
 
-                 $id = $request->request->get('id');    
+                $id = $request->request->get('id');    
 
-                         $user = $this->getUser();
+                $user = $this->getUser();
 
-        $repository = $this->getDoctrine()->getRepository('AppBundle:User');
-        $userx = $repository->findOneById($user->getId());
-        if($id=='Repondu'){
-         $sql="select R.id_reclamation as id_reclamation, R.message as message , R.object as objet ,DATE_FORMAT(R.created_at,'%d-%m-%Y %H:%i:%s') as created ,
-                       user_rec.username ,RP.id_reclamation_reponse ,RP.message as message_reponse,
-                       t_etudiant.nom as nom,t_etudiant.prenom as prenom, ac_promotion.ordre as promo , ac_formation.abreviation as forma,R.piece as piece
-                        from reclamation R 
-                        inner join fos_user as etud on R.fk_user = etud.id  
-                        inner join t_admission on etud.username = t_admission.code
-                        inner join t_inscription on t_admission.id = t_inscription.t_admission_id
-                        inner join ac_annee on t_inscription.ac_annee_id = ac_annee.id
-                        inner join ac_promotion on t_inscription.ac_promotion_id = ac_promotion.id
-                        inner join ac_formation on ac_promotion.formation_id = ac_formation.id
-                        inner join t_etudiant on t_etudiant.id = etud.t_etudiant_id
-                        left join reclamation_reponse as RP on RP.fk_reclamation = R.id_reclamation  and RP.active = 1
-                        left join fos_user as user_rec on RP.fk_user = user_rec.id 
-                        where ac_annee.validation_academique = 'non' and RP.message IS NOT NULL
-                        order by R.id_reclamation desc limit 1000";
-        }elseif($id=='NonRepondu'){
-         $sql="select R.id_reclamation as id_reclamation, R.message as message , R.object as objet ,DATE_FORMAT(R.created_at,'%d-%m-%Y %H:%i:%s') as created ,
-                       user_rec.username ,RP.id_reclamation_reponse ,RP.message as message_reponse,
-                       t_etudiant.nom as nom,t_etudiant.prenom as prenom, ac_promotion.ordre as promo , ac_formation.abreviation as forma,R.piece as piece
-                        from reclamation R 
-                        inner join fos_user as etud on R.fk_user = etud.id  
-                        inner join t_admission on etud.username = t_admission.code
-                        inner join t_inscription on t_admission.id = t_inscription.t_admission_id
-                        inner join ac_annee on t_inscription.ac_annee_id = ac_annee.id
-                        inner join ac_promotion on t_inscription.ac_promotion_id = ac_promotion.id
-                        inner join ac_formation on ac_promotion.formation_id = ac_formation.id
-                        inner join t_etudiant on t_etudiant.id = etud.t_etudiant_id
-                        left join reclamation_reponse as RP on RP.fk_reclamation = R.id_reclamation  and RP.active = 1
-                        left join fos_user as user_rec on RP.fk_user = user_rec.id 
-                        where ac_annee.validation_academique = 'non' and RP.message IS NULL
-                        order by R.id_reclamation desc";   
-        }else{
-          $sql="select R.id_reclamation as id_reclamation, R.message as message , R.object as objet ,DATE_FORMAT(R.created_at,'%d-%m-%Y %H:%i:%s') as created ,
-                       user_rec.username ,RP.id_reclamation_reponse ,RP.message as message_reponse,
-                       t_etudiant.nom as nom,t_etudiant.prenom as prenom, ac_promotion.ordre as promo , ac_formation.abreviation as forma,R.piece as piece
-                        from reclamation R 
-                        inner join fos_user as etud on R.fk_user = etud.id  
-                        inner join t_admission on etud.username = t_admission.code
-                        inner join t_inscription on t_admission.id = t_inscription.t_admission_id
-                        inner join ac_annee on t_inscription.ac_annee_id = ac_annee.id
-                        inner join ac_promotion on t_inscription.ac_promotion_id = ac_promotion.id
-                        inner join ac_formation on ac_promotion.formation_id = ac_formation.id
-                        inner join t_etudiant on t_etudiant.id = etud.t_etudiant_id
-                        left join reclamation_reponse as RP on RP.fk_reclamation = R.id_reclamation  and RP.active = 1
-                        left join fos_user as user_rec on RP.fk_user = user_rec.id 
-                        where ac_annee.validation_academique = 'non'
-                        order by R.id_reclamation desc";  
+                $repository = $this->getDoctrine()->getRepository('AppBundle:User');
+                $userx = $repository->findOneById($user->getId());
+
+                
+                $username = $user->getUsername();
+                $service_sql = "" ;
+                if($username !=  "reclamation"){
+                    $service_sql = " and  R.service =".$user->getId() ;
+                }
+            
+                $Repondu = "";
+                $NRepondu = "";
+                if($id=='Repondu'){
+                        $Repondu  = 'and RP.message IS NOT NULL';
+                }elseif($id=='NonRepondu'){
+                        $NRepondu = 'and RP.message IS NULL'; 
+                }
+
+                $sql=" select R.service as service , RP.valider as valider ,  R.id_reclamation as id_reclamation, R.message as message , R.object as objet ,DATE_FORMAT(R.created_at,'%d-%m-%Y %H:%i:%s') as created ,
+                            user_rec.username ,RP.id_reclamation_reponse ,RP.message as message_reponse,
+                            t_etudiant.nom as nom,t_etudiant.prenom as prenom, ac_promotion.ordre as promo , ac_formation.abreviation as forma,R.piece as piece
+                                from reclamation R 
+                                inner join fos_user as etud on R.fk_user = etud.id  
+                                inner join t_admission on etud.username = t_admission.code
+                                inner join t_inscription on t_admission.id = t_inscription.t_admission_id
+                                inner join ac_annee on t_inscription.ac_annee_id = ac_annee.id
+                                inner join ac_promotion on t_inscription.ac_promotion_id = ac_promotion.id
+                                inner join ac_formation on ac_promotion.formation_id = ac_formation.id
+                                inner join t_etudiant on t_etudiant.id = etud.t_etudiant_id
+                                left join reclamation_reponse as RP on RP.fk_reclamation = R.id_reclamation  and RP.active = 1
+                                left join fos_user as user_rec on RP.fk_user = user_rec.id 
+                                where ac_annee.validation_academique = 'non' ".$service_sql." ".$NRepondu." ".$Repondu."
+                                order by R.id_reclamation desc ";  
+
+                $stmt = $this->getDoctrine()->getConnection()->prepare($sql);
+                $stmt->execute();
+                $reclamations_lenght = $stmt->fetchAll(); 
+
+                $sql = $sql . ' LIMIT 0,100;';
+
+                $stmt = $this->getDoctrine()->getConnection()->prepare($sql);
+                $stmt->execute();
+                $reclamations = $stmt->fetchAll();
+
+                $type = 'filter';
+                
+                return $this->render('reclamation/RC.html.twig', [
+                        'reclamations'=>$reclamations,
+                        'reclamations_lenght'=>$reclamations_lenght,
+                        'type' => $type
+                ]);                
+
         }
-         $stmt = $this->getDoctrine()->getConnection()->prepare($sql);
-         $stmt->execute();
-         $reclamations = $stmt->fetchAll();
-         
-         return $this->render('reclamation/RC.html.twig', [
-                'reclamations'=>$reclamations
-         ]);                
-
-            }
 
     }
     
@@ -625,7 +633,7 @@ class ReclamationController extends Controller {
 
 
     //    var_dump($request->request->get('service'));
-
+        
         $arr     = explode(",", $request->request->get('reclamations'));
         $service = $request->request->get('service');
 
